@@ -1,7 +1,7 @@
-package main.kotlin.entity
+package entity
 
-import main.kotlin.Robot
-import main.kotlin.RobotState
+import Robot
+import RobotState
 import java.awt.Color
 import java.awt.Graphics2D
 

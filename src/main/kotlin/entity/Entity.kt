@@ -1,6 +1,6 @@
-package main.kotlin.entity
+package entity
 
-import main.kotlin.Robot
+import Robot
 import java.awt.Graphics2D
 
 data class Position(val x: Int, val y: Int)

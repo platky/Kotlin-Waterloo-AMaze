@@ -1,9 +1,7 @@
-package main.kotlin
-
-import main.kotlin.entity.Position
+import entity.Position
 import java.awt.Graphics2D
 
-class Robot() {
+class Robot {
     fun draw(graphics: Graphics2D, gridPosition: Position, interpolationFactor: Double) {
 
     }
