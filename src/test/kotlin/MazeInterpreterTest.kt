@@ -1,5 +1,7 @@
 import entity.Block
 import entity.Entity
+import entity.StartBlock
+import entity.Walkway
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -12,19 +14,19 @@ class MazeInterpreterTest {
             XXXXX
             XOOXX
             XXOXX
-            XXOOX
+            XXOYX
             XXXXX
         """.trimIndent()
 
-        val expectedGrid: Array<Array<Entity?>> = arrayOf(
-                arrayOf<Entity?>(Block(), Block(), Block(), Block(), Block()),
-                arrayOf<Entity?>(Block(), null, null, Block(), Block()),
-                arrayOf<Entity?>(Block(), Block(), null, Block(), Block()),
-                arrayOf<Entity?>(Block(), Block(), null, null, Block()),
-                arrayOf<Entity?>(Block(), Block(), Block(), Block(), Block())
+        val expectedGrid: Array<Array<Entity>> = arrayOf(
+                arrayOf<Entity>(Block(), Block(), Block(), Block(), Block()),
+                arrayOf<Entity>(Block(), Walkway(), Walkway(), Block(), Block()),
+                arrayOf<Entity>(Block(), Block(), Walkway(), Block(), Block()),
+                arrayOf<Entity>(Block(), Block(), Walkway(), StartBlock(), Block()),
+                arrayOf<Entity>(Block(), Block(), Block(), Block(), Block())
         )
 
-        val maze = createMazeFromFlatmap(flatMap)
+        val maze = createMazeFromFlatMap(flatMap)
 
         assertTrue(doGridsHaveMatchingEntities(expectedGrid, maze.entityGrid))
     }
@@ -33,11 +35,11 @@ class MazeInterpreterTest {
     fun checkHeightLessThan5ThrowsError() {
         val flatMap = """
             XXXXX
-            XXOXX
+            XXYXX
             XXXXX
         """.trimIndent()
 
-        assertThrows(UnsupportedGridSize::class.java) { createMazeFromFlatmap(flatMap) }
+        assertThrows(UnsupportedGridSize::class.java) { createMazeFromFlatMap(flatMap) }
     }
 
     @Test
@@ -46,41 +48,35 @@ class MazeInterpreterTest {
             XXX
             XOX
             XOX
-            XOX
+            XYX
             XXX
         """.trimIndent()
 
-        assertThrows(UnsupportedGridSize::class.java) { createMazeFromFlatmap(flatMap) }
+        assertThrows(UnsupportedGridSize::class.java) { createMazeFromFlatMap(flatMap) }
     }
 
     @Test
     fun checkInvalidEntityCharThrowsError() {
         val flatMap = """
-            XYXXX
-            XYXXX
-            XYXXX
-            XYXXX
-            XYXXX
+            X1XXX
+            X1XXX
+            X1XXX
+            X1XXX
+            X1XXX
         """.trimIndent()
 
-        assertThrows(InvalidMazeCharacterException::class.java) { createMazeFromFlatmap(flatMap)}
+        assertThrows(InvalidMazeCharacterException::class.java) { createMazeFromFlatMap(flatMap)}
     }
 
     private fun doGridsHaveMatchingEntities(
-            expected: Array<Array<Entity?>>, actual: Array<Array<Entity?>>
+            expected: Array<Array<Entity>>, actual: Array<Array<Entity>>
     ): Boolean {
         if (expected.size != actual.size || expected[0].size != actual[0].size) return false
 
         expected.forEachIndexed { y, row ->
             row.forEachIndexed { x, expectedEntity ->
                 val actualEntity = actual[y][x]
-                if (expectedEntity != null) {
-                    if (actualEntity == null) return false
-
-                    if (expectedEntity::class != actualEntity::class) return false
-                } else if (actualEntity != null) {
-                    return false
-                }
+                if (expectedEntity::class != actualEntity::class) return false
             }
         }
 
