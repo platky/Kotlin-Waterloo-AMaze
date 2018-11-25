@@ -5,14 +5,13 @@ import RobotState
 import java.awt.Color
 import java.awt.Graphics2D
 
-class Block : Entity() {
-    override fun draw(graphics: Graphics2D, topLeft: Position, bottomRight: Position) {
-        val width = bottomRight.x - topLeft.x
-        val height = bottomRight.y - topLeft.y
-        graphics.color = Color.DARK_GRAY
-        graphics.fillRect(topLeft.x, topLeft.y, width, height)
-
-        drawBorder(graphics, topLeft, bottomRight)
+object Block : Entity() {
+    override fun draw(graphics: Graphics2D, topLeft: Position, width: Int, height: Int) {
+        with(graphics) {
+            color = Color.DARK_GRAY
+            fillRect(topLeft.x, topLeft.y, width, height)
+            drawBorder(topLeft, width, height)
+        }
     }
 
     override fun interact(robot: Robot) {

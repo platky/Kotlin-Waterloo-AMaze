@@ -2,7 +2,6 @@ import entity.Destination
 import entity.Entity
 import entity.Position
 import entity.StartBlock
-import java.lang.IllegalArgumentException
 import java.util.*
 
 private val random = Random()
@@ -14,11 +13,10 @@ class Maze(val entityGrid: Array<Array<Entity>>) {
     //TODO: needs to be updatable but not directly editable by user
     var robotPosition: Position = chooseRandomStartingPosition()
 
-    fun getEntity(position: Position): Entity {
-        return entityGrid[position.y][position.x]
-    }
+    fun getEntity(position: Position): Entity = entityGrid[position.y][position.x]
 
     fun isPuzzleCompleted(): Boolean {
+        TODO("Delete this & update Destination.interact() to mark the puzzle as completed instead")
         val entityAtRobotPosition = entityGrid[robotPosition.y][robotPosition.x]
         return entityAtRobotPosition::class == Destination::class
     }
@@ -27,12 +25,12 @@ class Maze(val entityGrid: Array<Array<Entity>>) {
         val possibleStartingPositions: MutableList<Position> = mutableListOf()
         entityGrid.forEachIndexed { y, row ->
             row.forEachIndexed { x, entity ->
-                if (entity::class == StartBlock::class)
-                    possibleStartingPositions.add(Position(x, y))
+                if (entity == StartBlock) possibleStartingPositions.add(Position(x, y))
             }
         }
-        if (possibleStartingPositions.size == 0)
-            throw IllegalArgumentException("Maze must have a starting block")
+
+        TODO("Delete this check and validate that it's a valid maze in the maze interpreter instead")
+        require(possibleStartingPositions.size > 0) { "Maze must have a starting block" }
 
         return possibleStartingPositions[random.nextInt(possibleStartingPositions.size)]
     }

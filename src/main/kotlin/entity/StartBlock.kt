@@ -4,15 +4,13 @@ import Robot
 import java.awt.Color
 import java.awt.Graphics2D
 
-
-class StartBlock : Entity() {
-    override fun draw(graphics: Graphics2D, topLeft: Position, bottomRight: Position) {
-        val width = bottomRight.x - topLeft.x
-        val height = bottomRight.y - topLeft.y
-        graphics.color = Color.WHITE
-        graphics.fillRect(topLeft.x, topLeft.y, width, height)
-
-        drawBorder(graphics, topLeft, bottomRight)
+object StartBlock : Entity() {
+    override fun draw(graphics: Graphics2D, topLeft: Position, width: Int, height: Int) {
+        with(graphics) {
+            color = Color.WHITE
+            fillRect(topLeft.x, topLeft.y, width, height)
+            drawBorder(topLeft, width, height)
+        }
     }
 
     override fun interact(robot: Robot) {}
