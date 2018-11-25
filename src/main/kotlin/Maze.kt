@@ -3,7 +3,9 @@ import entity.Entity
 import entity.Position
 import entity.StartBlock
 import java.lang.IllegalArgumentException
+import java.util.*
 
+private val random = Random()
 
 class Maze(val entityGrid: Array<Array<Entity>>) {
     private val width = entityGrid[0].size
@@ -32,6 +34,6 @@ class Maze(val entityGrid: Array<Array<Entity>>) {
         if (possibleStartingPositions.size == 0)
             throw IllegalArgumentException("Maze must have a starting block")
 
-        return possibleStartingPositions.random()
+        return possibleStartingPositions[random.nextInt(possibleStartingPositions.size)]
     }
 }

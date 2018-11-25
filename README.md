@@ -7,6 +7,7 @@ Coding challenge for the [Kotlin Waterloo P2P Group].
 3. Start IntelliJ and choose **Create New Project**
 4. Select **Kotlin** on the left side and choose **Kotlin/JVM** on the right
 5. Click **Next** and select the newly created **Kotlin-Waterloo-AMaze** directory for the **Project location**
+6. Click **Finish** and ensure that you can successfully build the project (**Build** -> **Build Project**)
 
 
    [Kotlin Waterloo P2P Group]: https://www.meetup.com/Kotlin-Waterloo-P2P/
