@@ -8,61 +8,52 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 
-class ScreenManager(keyListener: KeyListener, windowListener: WindowListener) {
+class ScreenManager(
+        title: String,
+        windowWidth: Int,
+        windowHeight: Int,
+        keyListener: KeyListener,
+        windowListener: WindowListener
+) {
     private val device = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice
-    private val frame = JFrame()
+    private val window = JFrame()
     private var graphics: Graphics2D? = null
     private val bufferStrategy: BufferStrategy
 
     init {
-        with(frame) {
+        with(window) {
             addKeyListener(keyListener)
             addWindowListener(windowListener)
             focusTraversalKeysEnabled = false //allow custom actions for tab key etc.
-
-//            setFullScreen()
-            setWindowed("Kotlin Waterloo Amaze", 800, 600)
             ignoreRepaint = true
-            createBufferStrategy(2)
+            window.title = title
+            size = Dimension(windowWidth, windowHeight)
+            isUndecorated = false
+            isVisible = true
         }
-        // Kotlin 1.3 contracts will allow moving this initialization into the lambda
-        bufferStrategy = frame.bufferStrategy
+        bufferStrategy = window.setupDoubleBuffering()
+    }
+
+    private fun JFrame.setupDoubleBuffering(): BufferStrategy {
+        createBufferStrategy(2)
+        return bufferStrategy
     }
 
     fun getWidth(): Int = device.displayMode.width
 
     fun getHeight(): Int = device.displayMode.height
 
-    private fun JFrame.setFullScreen() {
-        isUndecorated = true
-        isResizable = false
-        device.fullScreenWindow = this
-
-        // Hide mouse cursor
-        val toolkit = Toolkit.getDefaultToolkit()
-        cursor = toolkit.createCustomCursor(toolkit.getImage(""), Point(0,0), "invisible")
-    }
-
-    private fun JFrame.setWindowed(windowTitle: String, width: Int, height: Int) {
-        title = windowTitle
-        size = Dimension(width, height)
-        isUndecorated = false
-        isVisible = true
-    }
-
-    fun restoreWindow() {
-        val window = device.fullScreenWindow?.let {
-            it.cursor = Cursor.getDefaultCursor()
-            it.dispose()
-        }
-        device.fullScreenWindow = null
-    }
-
+    /**
+     * Called at the beginning of each frame before you can start drawing on screen.
+     */
     fun initializeFrame(): Graphics2D {
         return (bufferStrategy.drawGraphics as Graphics2D).also { graphics = it }
     }
 
-    fun renderFrame() {
+    /**
+     * Called at the end of each frame to update the screen.
+     */
+    fun finalizeFrame() {
         graphics?.dispose()
         graphics = null
         if (!bufferStrategy.contentsLost()) bufferStrategy.show()
