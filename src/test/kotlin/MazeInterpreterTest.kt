@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class MazeInterpreterTest {
-
     @Test
     fun checkSimple5by5Maze() {
         val flatMap = """
@@ -19,11 +18,11 @@ class MazeInterpreterTest {
         """.trimIndent()
 
         val expectedGrid: Array<Array<Entity>> = arrayOf(
-                arrayOf<Entity>(Block(), Block(), Block(), Block(), Block()),
-                arrayOf<Entity>(Block(), Walkway(), Walkway(), Block(), Block()),
-                arrayOf<Entity>(Block(), Block(), Walkway(), Block(), Block()),
-                arrayOf<Entity>(Block(), Block(), Walkway(), StartBlock(), Block()),
-                arrayOf<Entity>(Block(), Block(), Block(), Block(), Block())
+                arrayOf<Entity>(Block, Block, Block, Block, Block),
+                arrayOf<Entity>(Block, Walkway, Walkway, Block, Block),
+                arrayOf<Entity>(Block, Block, Walkway, Block, Block),
+                arrayOf<Entity>(Block, Block, Walkway, StartBlock, Block),
+                arrayOf<Entity>(Block, Block, Block, Block, Block)
         )
 
         val maze = createMazeFromFlatMap(flatMap)

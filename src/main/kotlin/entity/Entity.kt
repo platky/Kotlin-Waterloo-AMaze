@@ -7,14 +7,11 @@ import java.awt.Graphics2D
 data class Position(val x: Int, val y: Int)
 
 abstract class Entity {
-    abstract fun draw(graphics: Graphics2D, topLeft: Position, bottomRight: Position)
+    abstract fun draw(graphics: Graphics2D, topLeft: Position, width: Int, height: Int)
 
-    protected fun drawBorder(graphics: Graphics2D, topLeft: Position, bottomRight: Position) {
-        val width = bottomRight.x - topLeft.x
-        val height = bottomRight.y - topLeft.y
-
-        graphics.color = Color.BLACK
-        graphics.drawRect(topLeft.x, topLeft.y, width, height)
+    protected fun Graphics2D.drawBorder(topLeft: Position, width: Int, height: Int) {
+        color = Color.BLACK
+        drawRect(topLeft.x, topLeft.y, width, height)
     }
 
     abstract fun interact(robot: Robot)
