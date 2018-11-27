@@ -14,7 +14,7 @@ class GameController {
     private val timer = GameTimer(this)
 
     /** Temp for demonstration purposes */
-    private var ballLocation = 0
+    private var ballLocation = 0.0
 
     init {
         Thread(timer).start()
@@ -24,7 +24,7 @@ class GameController {
         val timeDeltaMillis = timeDelta / 1_000_000.0
         val ballVellocity = 0.5 //pixels per millisecond
 
-        ballLocation += (timeDeltaMillis * ballVellocity).toInt()
+        ballLocation += timeDeltaMillis * ballVellocity
     }
 
     fun render() {
@@ -36,7 +36,7 @@ class GameController {
         graphics.fillRect(0, 0, windowWidth, windowHeight)
 
         graphics.color = Color.GREEN
-        graphics.fillOval(ballLocation, windowHeight / 2, 20, 20)
+        graphics.fillOval(ballLocation.toInt(), windowHeight / 2, 20, 20)
 
         screenManager.finalizeFrame()
     }
