@@ -9,6 +9,6 @@ object Destination : Entity() {
     }
 
     override fun interact(robot: Robot) {
-
+        robot.transitionToState(RobotState.COMPLETED)
     }
 }

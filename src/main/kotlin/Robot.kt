@@ -1,7 +1,10 @@
+import RobotState.WORKING
 import entity.Position
 import java.awt.Graphics2D
 
 class Robot {
+    var state: RobotState = WORKING
+
     fun draw(graphics: Graphics2D, gridPosition: Position, interpolationFactor: Double) {
 
     }
@@ -11,13 +14,14 @@ class Robot {
      */
     fun update(interpolationFactor: Double) {}
 
+    //TODO we may not need this function unless we want some transition validation
     fun transitionToState(state: RobotState) {
-
+        this.state = state
     }
 }
 
 enum class RobotState {
     WORKING,
     CRASHED,
-    LAZING_ABOUT
+    COMPLETED
 }

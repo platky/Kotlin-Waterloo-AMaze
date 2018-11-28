@@ -1,4 +1,3 @@
-import entity.Destination
 import entity.Entity
 import entity.Position
 import entity.StartBlock
@@ -15,12 +14,6 @@ class Maze(val entityGrid: Array<Array<Entity>>) {
 
     fun getEntity(position: Position): Entity = entityGrid[position.y][position.x]
 
-    fun isPuzzleCompleted(): Boolean {
-        TODO("Delete this & update Destination.interact() to mark the puzzle as completed instead")
-        val entityAtRobotPosition = entityGrid[robotPosition.y][robotPosition.x]
-        return entityAtRobotPosition::class == Destination::class
-    }
-
     private fun chooseRandomStartingPosition(): Position {
         val possibleStartingPositions: MutableList<Position> = mutableListOf()
         entityGrid.forEachIndexed { y, row ->
@@ -28,9 +21,6 @@ class Maze(val entityGrid: Array<Array<Entity>>) {
                 if (entity == StartBlock) possibleStartingPositions.add(Position(x, y))
             }
         }
-
-        TODO("Delete this check and validate that it's a valid maze in the maze interpreter instead")
-        require(possibleStartingPositions.size > 0) { "Maze must have a starting block" }
 
         return possibleStartingPositions[random.nextInt(possibleStartingPositions.size)]
     }

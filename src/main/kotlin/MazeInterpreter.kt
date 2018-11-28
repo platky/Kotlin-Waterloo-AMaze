@@ -1,33 +1,39 @@
-import entity.Block
-import entity.Entity
-import entity.StartBlock
-import entity.Walkway
-import java.lang.IllegalArgumentException
+import entity.*
 
 fun createMazeFromFlatMap(flatMap: String): Maze {
     val rows = flatMap.split("\n")
     val height = rows.size
-    //TODO: Consider just using require(height >= 5) { "..." } here
-    if (height < 5) throw UnsupportedGridSize("Maze must be at least 5 spaces tall")
-    val width = rows[0].length
-    if (width < 5) throw UnsupportedGridSize("Maze must be at least 5 spaces wide")
+    require(height >= 5) { "Maze must be at least 5 spaces tall" }
 
-    TODO("Ensure that atleast 1 starting block & destination exists")
+    val width = rows[0].length
+    require(width >= 5) { "Maze must be at least 5 spaces wide" }
+
+    var hasStartingBlock = false
+    var hasDestinationBlock = false
     val entityGrid: Array<Array<Entity>> = Array(height) { y ->
         Array(width) { x ->
-            rows[y][x].createEntity()
+            val entity = rows[y][x].createEntity()
+            if (entity == StartBlock)
+                hasStartingBlock = true
+            if (entity == Destination)
+                hasDestinationBlock = true
+
+            entity
         }
     }
+
+    require(hasStartingBlock) { "Maze must have at least one starting block" }
+    require(hasDestinationBlock) { "Maze must have a destination block" }
 
     return Maze(entityGrid)
 }
 
 private fun Char.createEntity(): Entity = when (this) {
     'X' -> Block
-    'Y' -> StartBlock
+    'S' -> StartBlock
     'O' -> Walkway
+    'D' -> Destination
     else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
 }
 
 class InvalidMazeCharacterException(message: String) : UnsupportedOperationException(message)
-class UnsupportedGridSize(message: String) : IllegalArgumentException(message)
