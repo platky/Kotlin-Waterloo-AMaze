@@ -24,8 +24,8 @@ class Robot {
 
         graphics.color = Color.RED
 
-        val robotWidth = 20
-        val robotHeight = 40
+        val robotWidth = width / 5
+        val robotHeight = height / 3
         graphics.fillRect(
                 x + (width - robotWidth) / 2, y + (height - robotHeight) / 2,
                 robotWidth, robotHeight
