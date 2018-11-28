@@ -1,10 +1,12 @@
-package main.kotlin.core
+package main.kotlin.amaze.core
 
 const val NANOS_PER_MILLI = 1_000_000L
 const val NANOS_PER_SECOND = 1_000L * NANOS_PER_MILLI
-const val FRAME_TIME = NANOS_PER_SECOND / 60L // 60 frames per second
 
-class GameTimer(private val controller: GameController): Runnable {
+class GameTimer(refreshRate: Int, private val controller: GameController): Runnable {
+    /** Match refresh rate */
+    private val frameTime = NANOS_PER_SECOND / refreshRate
+
     @Volatile
     private var isRunning = true
 
@@ -37,23 +39,9 @@ class GameTimer(private val controller: GameController): Runnable {
     }
 
     private fun syncFrameRate(lastUpdateTime: Long) {
-        val currentTime = System.nanoTime()
-        val endTime = lastUpdateTime + FRAME_TIME
-        val timeLeft = endTime - currentTime
-        if(timeLeft > 0) {
-            try {
-                Thread.sleep(timeLeft / NANOS_PER_MILLI)
-            } catch (e: InterruptedException) {
-                //ignore
-            }
-        }
-
+        val endTime = lastUpdateTime + frameTime
         do {
             Thread.yield()
         } while (System.nanoTime() < endTime)
-    }
-
-    private fun sleep(nanoseconds: Long) {
-
     }
 }

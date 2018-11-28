@@ -1,4 +1,4 @@
-package main.kotlin.core
+package main.kotlin.amaze.core
 
 import java.awt.*
 import java.awt.event.KeyListener
@@ -27,9 +27,11 @@ class ScreenManager(
             focusTraversalKeysEnabled = false //allow custom actions for tab key etc.
             ignoreRepaint = true
             window.title = title
-            size = Dimension(windowWidth, windowHeight)
             isUndecorated = false
             isVisible = true
+            contentPane.preferredSize = Dimension(windowWidth, windowHeight)
+            pack()
+            setLocationRelativeTo(null)
         }
         bufferStrategy = window.setupDoubleBuffering()
     }
@@ -39,9 +41,13 @@ class ScreenManager(
         return bufferStrategy
     }
 
-    fun getWidth(): Int = device.displayMode.width
+    fun getRefreshRate(): Int = device.displayMode.refreshRate
 
-    fun getHeight(): Int = device.displayMode.height
+    fun getWidth(): Int = window.width
+
+    fun getHeight(): Int = window.contentPane.height
+
+    fun getTitleBarHeight(): Int = window.height - getHeight()
 
     /**
      * Called at the beginning of each frame before you can start drawing on screen.

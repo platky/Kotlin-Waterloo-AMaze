@@ -1,7 +1,9 @@
+package main.kotlin.amaze
+
 import entity.*
 
-fun createMazeFromFlatMap(flatMap: String): Maze {
-    val rows = flatMap.split("\n")
+fun String.toMaze(): Maze {
+    val rows = split("\n")
     val height = rows.size
     require(height >= 5) { "Maze must be at least 5 spaces tall" }
 
@@ -12,7 +14,7 @@ fun createMazeFromFlatMap(flatMap: String): Maze {
     var hasDestinationBlock = false
     val entityGrid: Array<Array<Entity>> = Array(height) { y ->
         Array(width) { x ->
-            val entity = rows[y][x].createEntity()
+            val entity = rows[y][x].toEntity()
             if (entity == StartBlock)
                 hasStartingBlock = true
             if (entity == Destination)
@@ -28,7 +30,7 @@ fun createMazeFromFlatMap(flatMap: String): Maze {
     return Maze(entityGrid)
 }
 
-private fun Char.createEntity(): Entity = when (this) {
+private fun Char.toEntity(): Entity = when (this) {
     'X' -> Block
     'S' -> StartBlock
     'O' -> Walkway
