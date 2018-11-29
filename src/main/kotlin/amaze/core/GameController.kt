@@ -25,13 +25,7 @@ class GameController(private val maze: Maze) {
 
     fun render() {
         val graphics = screenManager.initializeFrame()
-
-        val width = screenManager.getWidth()
-        val height = screenManager.getHeight()
-
-        graphics.translate(0, screenManager.getTitleBarHeight())
-        maze.draw(graphics, width, height)
-
+        maze.draw(graphics, screenManager.getWidth(), screenManager.getHeight())
         screenManager.finalizeFrame()
     }
 

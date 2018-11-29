@@ -47,13 +47,17 @@ class ScreenManager(
 
     fun getHeight(): Int = window.contentPane.height
 
-    fun getTitleBarHeight(): Int = window.height - getHeight()
+    private fun getTitleBarHeight(): Int=  window.insets.top
 
     /**
      * Called at the beginning of each frame before you can start drawing on screen.
      */
     fun initializeFrame(): Graphics2D {
-        return (bufferStrategy.drawGraphics as Graphics2D).also { graphics = it }
+        val graphics2D = bufferStrategy.drawGraphics as Graphics2D
+        graphics2D.translate(0, getTitleBarHeight())
+
+        graphics = graphics2D
+        return graphics2D
     }
 
     /**
