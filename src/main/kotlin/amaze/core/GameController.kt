@@ -6,8 +6,8 @@ class GameController(private val maze: Maze) {
     private val inputManager = InputManager(this)
     private val screenManager = ScreenManager(
             title = "Kotlin Waterloo Amaze",
-            windowWidth = 600,
-            windowHeight = 600,
+            aspectRatio = maze.numColumns.toDouble() / maze.numRows,
+            screenRatio = 0.75,
             keyListener = inputManager,
             windowListener = inputManager
     )

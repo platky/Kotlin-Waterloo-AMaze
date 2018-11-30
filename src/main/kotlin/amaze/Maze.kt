@@ -9,9 +9,9 @@ import java.util.*
 
 private val random = Random()
 
-class Maze(val entityGrid: Array<Array<Entity>>) {
-    private val numColumns = entityGrid[0].size
-    private val numRows = entityGrid.size
+class Maze(private val entityGrid: Array<Array<Entity>>) {
+    val numColumns = entityGrid[0].size
+    val numRows = entityGrid.size
     private val robot = Robot()
 
     fun update(elapsedTimeMillis: Long) {

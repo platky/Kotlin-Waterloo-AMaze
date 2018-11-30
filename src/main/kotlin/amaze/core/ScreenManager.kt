@@ -10,8 +10,8 @@ import javax.swing.JFrame
 
 class ScreenManager(
         title: String,
-        windowWidth: Int,
-        windowHeight: Int,
+        aspectRatio: Double, // aspectRatio = width / height
+        screenRatio: Double, // percentage of the width or height to use (based on aspect ratio)
         keyListener: KeyListener,
         windowListener: WindowListener
 ) {
@@ -21,6 +21,22 @@ class ScreenManager(
     private val bufferStrategy: BufferStrategy
 
     init {
+        require(aspectRatio > 0)
+        require(screenRatio > 0 && screenRatio <= 1.0)
+
+        val screenWidth = device.displayMode.width
+        val screenHeight = device.displayMode.height
+
+        val windowWidth: Double
+        val windowHeight: Double
+        if (aspectRatio > screenWidth.toDouble() / screenHeight) {
+            windowWidth = screenWidth * screenRatio
+            windowHeight = windowWidth / aspectRatio
+        } else {
+            windowHeight = screenHeight * screenRatio
+            windowWidth = windowHeight * aspectRatio
+        }
+
         with(window) {
             addKeyListener(keyListener)
             addWindowListener(windowListener)
@@ -29,7 +45,7 @@ class ScreenManager(
             window.title = title
             isUndecorated = false
             isVisible = true
-            contentPane.preferredSize = Dimension(windowWidth, windowHeight)
+            contentPane.preferredSize = Dimension(windowWidth.toInt(), windowHeight.toInt())
             pack()
             setLocationRelativeTo(null)
         }
