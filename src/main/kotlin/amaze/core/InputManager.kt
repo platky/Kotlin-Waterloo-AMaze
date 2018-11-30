@@ -1,4 +1,4 @@
-package main.kotlin.core
+package main.kotlin.amaze.core
 
 import java.awt.event.*
 
