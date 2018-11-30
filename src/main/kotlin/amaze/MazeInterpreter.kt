@@ -34,6 +34,7 @@ private fun Char.toEntity(): Entity = when (this) {
     'X' -> Block
     'S' -> StartBlock
     'O' -> Walkway
+    'M' -> Mine
     'D' -> Destination
     else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
 }
