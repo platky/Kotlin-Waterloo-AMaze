@@ -8,7 +8,6 @@ import java.awt.Graphics2D
 class Robot {
     private var state= WAITING
     private var orientation = Orientation.NORTH
-    private var nextOrientation = Orientation.NORTH
 
     fun draw(
             graphics: Graphics2D,
@@ -18,8 +17,8 @@ class Robot {
             height: Int,
             movePercentageComplete: Double
     ) {
-        val rotation = state.rotation * movePercentageComplete
-        graphics.rotate(orientation.radians + rotation, x + width / 2.0, y + height / 2.0)
+        val rotation = orientation.radians + state.rotation * movePercentageComplete
+        graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
 
         graphics.color = Color.RED
 
@@ -37,17 +36,14 @@ class Robot {
     }
 
     fun setCurrentAction(action: RobotAction) {
+        if (state == TURNING_LEFT) {
+            orientation = orientation.turnLeft()
+        } else if (state == TURNING_RIGHT) {
+            orientation = orientation.turnRight()
+        }
         state = when (action) {
-            RobotAction.TURN_LEFT -> {
-                orientation = nextOrientation
-                nextOrientation = orientation.turnLeft()
-                TURNING_LEFT
-            }
-            RobotAction.TURN_RIGHT -> {
-                orientation = nextOrientation
-                nextOrientation = orientation.turnRight()
-                TURNING_RIGHT
-            }
+            RobotAction.TURN_LEFT -> TURNING_LEFT
+            RobotAction.TURN_RIGHT -> TURNING_RIGHT
             RobotAction.MOVE_FORWARD -> MOVING_FORWARD
         }
     }
