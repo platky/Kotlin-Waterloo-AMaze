@@ -20,6 +20,6 @@ fun main(args: Array<String>) {
 
 class Puzzle1 : RobotController {
     override fun getNextMove(maze: Maze): RobotAction {
-        return RobotAction.TURN_RIGHT
+        return if (Math.random() > 0.5) RobotAction.TURN_RIGHT else RobotAction.TURN_LEFT
     }
 }
