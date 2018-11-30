@@ -47,6 +47,7 @@ class ScreenManager(
             isVisible = true
             contentPane.preferredSize = Dimension(windowWidth.toInt(), windowHeight.toInt())
             pack()
+            isResizable = false
             setLocationRelativeTo(null)
         }
         bufferStrategy = window.setupDoubleBuffering()
