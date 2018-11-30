@@ -2,7 +2,7 @@ package main.kotlin.amaze
 
 import entity.*
 
-fun String.toMaze(): Maze {
+fun String.toMaze(controller: RobotController): Maze {
     val rows = split("\n")
     val height = rows.size
     require(height >= 5) { "Maze must be at least 5 spaces tall" }
@@ -27,7 +27,7 @@ fun String.toMaze(): Maze {
     require(hasStartingBlock) { "Maze must have at least one starting block" }
     require(hasDestinationBlock) { "Maze must have a destination block" }
 
-    return Maze(entityGrid)
+    return Maze(entityGrid, controller)
 }
 
 private fun Char.toEntity(): Entity = when (this) {
