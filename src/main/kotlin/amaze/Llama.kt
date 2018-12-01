@@ -34,6 +34,9 @@ class Llama {
             llamaWidth.toInt(), llamaHeight.toInt(), null)
     }
 
+    /**
+     * Sets the current action and returns the current position given the last position.
+     */
     fun setCurrentAction(action: LlamaAction, lastPosition: Position): Position {
         val currentPosition = Position(
                 lastPosition.x + (orientation.xDirection * state.speed).toInt(),
