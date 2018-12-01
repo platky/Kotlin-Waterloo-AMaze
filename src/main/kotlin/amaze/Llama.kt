@@ -1,12 +1,14 @@
 package main.kotlin.amaze
 
-import entity.Position
-import main.kotlin.amaze.RobotState.*
-import java.awt.Color
+import main.kotlin.amaze.LlamaState.*
 import java.awt.Graphics2D
+import javax.imageio.ImageIO
 
-class Robot {
-    private var state= WAITING
+class Llama {
+    private val image = ImageIO.read(javaClass.getResource("/images/llama.png"))
+    private val sizeCoefficient = 0.6
+
+    private var state = WAITING
     private var orientation = Orientation.NORTH
 
     fun draw(
@@ -19,42 +21,34 @@ class Robot {
     ) {
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
-
-        graphics.color = Color.RED
-
-        val robotWidth = width / 5
-        val robotHeight = height / 3
-        graphics.fillRect(
-                x + (width - robotWidth) / 2, y + (height - robotHeight) / 2,
-                robotWidth, robotHeight
-        )
-        graphics.color = Color.BLUE
-        graphics.fillOval(
-                x + (width - robotWidth) / 2, y + (height - robotWidth / 2) / 2
-                , robotWidth, robotWidth
-        )
+        val llamaHeight = height * sizeCoefficient
+        val llamaWidth = (llamaHeight / image.height) * image.width
+        graphics.drawImage(image,
+            (x + (width - llamaWidth) / 2).toInt(),
+            (y + (height - llamaHeight) / 2).toInt(),
+            llamaWidth.toInt(), llamaHeight.toInt(), null)
     }
 
-    fun setCurrentAction(action: RobotAction) {
+    fun setCurrentAction(action: LlamaAction) {
         if (state == TURNING_LEFT) {
             orientation = orientation.turnLeft()
         } else if (state == TURNING_RIGHT) {
             orientation = orientation.turnRight()
         }
         state = when (action) {
-            RobotAction.TURN_LEFT -> TURNING_LEFT
-            RobotAction.TURN_RIGHT -> TURNING_RIGHT
-            RobotAction.MOVE_FORWARD -> MOVING_FORWARD
+            LlamaAction.TURN_LEFT -> TURNING_LEFT
+            LlamaAction.TURN_RIGHT -> TURNING_RIGHT
+            LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
         }
     }
 
     //TODO we may not need this function unless we want some transition validation
-    fun transitionToState(state: RobotState) {
+    fun transitionToState(state: LlamaState) {
         this.state = state
     }
 }
 
-enum class RobotState(val rotation: Double) {
+enum class LlamaState(val rotation: Double) {
     WAITING(0.0),
     TURNING_LEFT(-Math.PI / 2),
     TURNING_RIGHT(Math.PI / 2),

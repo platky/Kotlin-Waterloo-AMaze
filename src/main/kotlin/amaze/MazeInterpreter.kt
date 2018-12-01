@@ -1,8 +1,8 @@
 package main.kotlin.amaze
 
-import entity.*
+import main.kotlin.amaze.entity.*
 
-fun String.toMaze(controller: RobotController): Maze {
+fun String.toMaze(controller: LlamaController): Maze {
     val rows = split("\n")
     val height = rows.size
     require(height >= 5) { "Maze must be at least 5 spaces tall" }
@@ -31,10 +31,10 @@ fun String.toMaze(controller: RobotController): Maze {
 }
 
 private fun Char.toEntity(): Entity = when (this) {
-    'X' -> Block
+    'X' -> Block()
     'S' -> StartBlock
     'O' -> Walkway
-    'M' -> Mine
+    'P' -> Pit
     'D' -> Destination
     else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
 }
