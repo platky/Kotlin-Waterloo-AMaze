@@ -7,11 +7,14 @@ import main.kotlin.amaze.core.GameController
 import main.kotlin.amaze.toMaze
 
 private val puzzleDefinition = """
-    XDXXXXX
-    XOOXXXX
-    XXSXXXX
-    XXOOOOX
-    XXXXXXX
+    XDXXXXXXXXXXXX
+    XOOXXXXXOOOOOX
+    XXOOOOOOOOXXOX
+    XXOOOOXXXOXOOX
+    XXXXXXXXOOXXXX
+    XXXOOOSOOOXXXX
+    XOOOOOXXXOOOOX
+    XXXXXXXXXXXXXX
 """.trimIndent()
 
 fun main(args: Array<String>) {
