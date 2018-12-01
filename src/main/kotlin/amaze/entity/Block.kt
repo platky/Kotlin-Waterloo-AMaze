@@ -1,20 +1,24 @@
-package entity
+package main.kotlin.amaze.entity
 
-import main.kotlin.amaze.Robot
-import main.kotlin.amaze.RobotState
-import java.awt.Color
+import main.kotlin.amaze.Llama
+import main.kotlin.amaze.LlamaState
 import java.awt.Graphics2D
+import java.util.*
+import javax.imageio.ImageIO
 
-object Block : Entity() {
+class Block : Entity() {
+    private val image = ImageIO.read(javaClass.getResource(randomWallImage()))
+
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
-        with(graphics) {
-            color = Color.DARK_GRAY
-            fillRect(x, y, width, height)
-            drawBorder(x, y, width, height)
-        }
+        graphics.drawImage(image, x, y, width, height, null)
     }
 
-    override fun interact(robot: Robot) {
-        robot.transitionToState(RobotState.CRASHED)
+    override fun interact(llama: Llama) {
+        llama.transitionToState(LlamaState.CRASHED)
+    }
+
+    private fun randomWallImage(): String {
+        val random = Random().nextInt(3) + 1
+        return "/images/block$random.png"
     }
 }

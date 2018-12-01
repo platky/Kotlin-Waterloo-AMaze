@@ -1,8 +1,8 @@
 package main.kotlin.amaze.puzzles
 
 import main.kotlin.amaze.Maze
-import main.kotlin.amaze.RobotAction
-import main.kotlin.amaze.RobotController
+import main.kotlin.amaze.LlamaAction
+import main.kotlin.amaze.LlamaController
 import main.kotlin.amaze.core.GameController
 import main.kotlin.amaze.toMaze
 
@@ -18,8 +18,8 @@ fun main(args: Array<String>) {
     GameController(puzzleDefinition.toMaze(Puzzle1())).startGame()
 }
 
-class Puzzle1 : RobotController {
-    override fun getNextMove(maze: Maze): RobotAction {
-        return if (Math.random() > 0.5) RobotAction.TURN_RIGHT else RobotAction.TURN_LEFT
+class Puzzle1 : LlamaController {
+    override fun getNextMove(maze: Maze): LlamaAction {
+        return if (Math.random() > 0.5) LlamaAction.TURN_RIGHT else LlamaAction.TURN_LEFT
     }
 }

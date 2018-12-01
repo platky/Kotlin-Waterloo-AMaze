@@ -1,8 +1,8 @@
 package main.kotlin.amaze
 
-import entity.Entity
-import entity.Position
-import entity.StartBlock
+import main.kotlin.amaze.entity.Entity
+import main.kotlin.amaze.entity.Position
+import main.kotlin.amaze.entity.StartBlock
 import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
@@ -10,15 +10,15 @@ import java.util.*
 private val random = Random()
 private const val MILLIS_PER_MOVE = 1000L
 
-class Maze(private val entityGrid: Array<Array<Entity>>, private val controller: RobotController) {
+class Maze(private val entityGrid: Array<Array<Entity>>, private val controller: LlamaController) {
     private var gameTime = 0L
     private var lastMoveTime = -MILLIS_PER_MOVE
 
     val numColumns = entityGrid[0].size
     val numRows = entityGrid.size
 
-    private val robot = Robot()
-    var robotPosition: Position = chooseRandomStartingPosition()
+    private val llama = Llama()
+    var llamaPosition: Position = chooseRandomStartingPosition()
         private set
 
     fun update(elapsedTimeMillis: Long) {
@@ -26,7 +26,7 @@ class Maze(private val entityGrid: Array<Array<Entity>>, private val controller:
 
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
             lastMoveTime += MILLIS_PER_MOVE
-            robot.setCurrentAction(controller.getNextMove(this))
+            llama.setCurrentAction(controller.getNextMove(this))
         }
     }
 
@@ -50,9 +50,9 @@ class Maze(private val entityGrid: Array<Array<Entity>>, private val controller:
             currentMoveTime.toDouble() / MILLIS_PER_MOVE
         }
 
-        robot.draw(
+        llama.draw(
                 graphics,
-                robotPosition.x * cellWidth, robotPosition.y * cellHeight,
+                llamaPosition.x * cellWidth, llamaPosition.y * cellHeight,
                 cellWidth, cellHeight,
                 movePercentageComplete
         )
