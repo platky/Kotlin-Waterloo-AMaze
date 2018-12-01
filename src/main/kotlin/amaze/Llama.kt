@@ -1,11 +1,10 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaState.*
+import main.kotlin.amaze.core.Assets
 import java.awt.Graphics2D
-import javax.imageio.ImageIO
 
 class Llama {
-    private val image = ImageIO.read(javaClass.getResource("/resources/images/llama.png"))
     private val sizeCoefficient = 0.6
 
     private var state = WAITING
@@ -22,8 +21,8 @@ class Llama {
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
         val llamaHeight = height * sizeCoefficient
-        val llamaWidth = (llamaHeight / image.height) * image.width
-        graphics.drawImage(image,
+        val llamaWidth = (llamaHeight / Assets.llama.height) * Assets.llama.width
+        graphics.drawImage(Assets.llama,
             (x + (width - llamaWidth) / 2).toInt(),
             (y + (height - llamaHeight) / 2).toInt(),
             llamaWidth.toInt(), llamaHeight.toInt(), null)
