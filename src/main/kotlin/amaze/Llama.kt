@@ -4,6 +4,7 @@ import main.kotlin.amaze.LlamaState.*
 import main.kotlin.amaze.core.Assets
 import main.kotlin.amaze.entity.Position
 import java.awt.Graphics2D
+import java.awt.image.BufferedImage
 
 class Llama {
     private val sizeCoefficient = 0.6
@@ -19,6 +20,7 @@ class Llama {
             height: Int,
             movePercentageComplete: Double
     ) {
+        val image = selectStateImageAsset(state)
         val ratio = state.speed * movePercentageComplete
         val deltaX = orientation.xDirection * width * ratio
         val deltaY = orientation.yDirection * height * ratio
@@ -27,8 +29,8 @@ class Llama {
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
         val llamaHeight = height * sizeCoefficient
-        val llamaWidth = (llamaHeight / Assets.llama.height) * Assets.llama.width
-        graphics.drawImage(Assets.llama,
+        val llamaWidth = (llamaHeight / image.height) * image.width
+        graphics.drawImage(image,
             (x + (width - llamaWidth) / 2).toInt(),
             (y + (height - llamaHeight) / 2).toInt(),
             llamaWidth.toInt(), llamaHeight.toInt(), null)
@@ -59,6 +61,13 @@ class Llama {
     //TODO we may not need this function unless we want some transition validation
     fun transitionToState(state: LlamaState) {
         this.state = state
+    }
+
+    private fun selectStateImageAsset(state: LlamaState): BufferedImage {
+        return when(state) {
+            CRASHED -> Assets.llamaDead
+            else -> Assets.llama
+        }
     }
 }
 
