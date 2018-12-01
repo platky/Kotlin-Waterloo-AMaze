@@ -12,6 +12,8 @@ class Llama {
     private var state = WAITING
     private var orientation = Orientation.NORTH
 
+    fun isDead(): Boolean = state == CRASHED
+
     fun draw(
             graphics: Graphics2D,
             x: Int,
@@ -110,7 +112,7 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     TURNING_LEFT(-Math.PI / 2, 0.0),
     TURNING_RIGHT(Math.PI / 2, 0.0),
     MOVING_FORWARD(0.0, 1.0),
-    CRASHED(0.0, 0.0),
+    CRASHED(0.0, 0.1),
     COMPLETED(0.0, 0.0)
 }
 
