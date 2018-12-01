@@ -6,7 +6,7 @@ import java.awt.Graphics2D
 import javax.imageio.ImageIO
 
 object Destination : Entity() {
-    private val image = ImageIO.read(javaClass.getResource("/images/hay.png"))
+    private val image = ImageIO.read(javaClass.getResource("/resources/images/hay.png"))
 
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
         graphics.drawImage(image, x, y, width, height, null)

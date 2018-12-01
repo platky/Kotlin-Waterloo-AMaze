@@ -5,7 +5,7 @@ import java.awt.Graphics2D
 import javax.imageio.ImageIO
 
 class Llama {
-    private val image = ImageIO.read(javaClass.getResource("/images/llama.png"))
+    private val image = ImageIO.read(javaClass.getResource("/resources/images/llama.png"))
     private val sizeCoefficient = 0.6
 
     private var state = WAITING
