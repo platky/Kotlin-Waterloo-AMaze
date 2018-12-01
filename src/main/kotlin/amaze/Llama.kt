@@ -20,42 +20,76 @@ class Llama {
             height: Int,
             movePercentageComplete: Double
     ) {
-        val image = selectStateImageAsset(state)
+        graphics.renderTransformed(x, y, width, height, movePercentageComplete) {
+            val image = selectStateImageAsset(state)
+
+            val llamaHeight = height * sizeCoefficient
+            val llamaWidth = (llamaHeight / image.height) * image.width
+            graphics.drawImage(
+                    image,
+                    (x + (width - llamaWidth) / 2).toInt(),
+                    (y + (height - llamaHeight) / 2).toInt(),
+                    llamaWidth.toInt(), llamaHeight.toInt(),
+                    null
+            )
+        }
+    }
+
+    /**
+     * Transforms the screen by translating & rotating appropriately followed by the specified
+     * [render] after which the transformation is reversed to leave the graphics in a good state.
+     */
+    private inline fun Graphics2D.renderTransformed(
+            x: Int,
+            y: Int,
+            width: Int,
+            height: Int,
+            movePercentageComplete: Double,
+            render: Graphics2D.() -> Unit
+    ) {
         val ratio = state.speed * movePercentageComplete
         val deltaX = orientation.xDirection * width * ratio
         val deltaY = orientation.yDirection * height * ratio
-        graphics.translate(deltaX, deltaY)
+        translate(deltaX, deltaY)
 
         val rotation = orientation.radians + state.rotation * movePercentageComplete
-        graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
-        val llamaHeight = height * sizeCoefficient
-        val llamaWidth = (llamaHeight / image.height) * image.width
-        graphics.drawImage(image,
-            (x + (width - llamaWidth) / 2).toInt(),
-            (y + (height - llamaHeight) / 2).toInt(),
-            llamaWidth.toInt(), llamaHeight.toInt(), null)
+        rotate(rotation, x + width / 2.0, y + height / 2.0)
+
+        render()
+
+        rotate(-rotation, x + width / 2.0, y + height / 2.0)
+        translate(-deltaX, -deltaY)
     }
 
     /**
      * Sets the current action and returns the current position given the last position.
      */
     fun setCurrentAction(action: LlamaAction, lastPosition: Position): Position {
-        val currentPosition = Position(
-                lastPosition.x + (orientation.xDirection * state.speed).toInt(),
-                lastPosition.y + (orientation.yDirection * state.speed).toInt()
-        )
+        val currentPosition = getNextPosition(lastPosition)
+        updateOrientation()
+        state = action.toState()
+        return currentPosition
+    }
 
+    fun getNextPosition(currentPosition: Position): Position {
+        return Position(
+                currentPosition.x + (orientation.xDirection * state.speed).toInt(),
+                currentPosition.y + (orientation.yDirection * state.speed).toInt()
+        )
+    }
+
+    private fun updateOrientation() {
         if (state == TURNING_LEFT) {
             orientation = orientation.turnLeft()
         } else if (state == TURNING_RIGHT) {
             orientation = orientation.turnRight()
         }
-        state = when (action) {
-            LlamaAction.TURN_LEFT -> TURNING_LEFT
-            LlamaAction.TURN_RIGHT -> TURNING_RIGHT
-            LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
-        }
-        return currentPosition
+    }
+
+    private fun LlamaAction.toState(): LlamaState = when (this) {
+        LlamaAction.TURN_LEFT -> TURNING_LEFT
+        LlamaAction.TURN_RIGHT -> TURNING_RIGHT
+        LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
     }
 
     //TODO we may not need this function unless we want some transition validation

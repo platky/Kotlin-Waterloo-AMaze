@@ -26,8 +26,11 @@ class Maze(private val entityGrid: Array<Array<Entity>>, private val controller:
 
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
             lastMoveTime += MILLIS_PER_MOVE
-            llamaPosition = llama
-                    .setCurrentAction(controller.getNextMove(this), llamaPosition)
+            llamaPosition = llama.setCurrentAction(
+                    controller.getNextMove(this),
+                    llamaPosition
+            )
+            getEntity(llama.getNextPosition(llamaPosition)).interact(llama)
         }
     }
 
