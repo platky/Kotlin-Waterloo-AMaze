@@ -9,6 +9,9 @@ object Assets {
     lateinit var llama: BufferedImage
         private set
 
+    lateinit var llamaDead: BufferedImage
+        private set
+
     lateinit var block1: BufferedImage
         private set
 
@@ -30,6 +33,7 @@ object Assets {
     fun loadImages(screenManager: ScreenManager) {
         with(screenManager) {
             llama = loadImage("$baseImagePath/llama.png")
+            llamaDead = loadImage("$baseImagePath/llama_dead.png")
 
             block1 = loadImage("$baseImagePath/block1.png")
             block2 = loadImage("$baseImagePath/block2.png")
