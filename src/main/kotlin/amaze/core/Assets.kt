@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage
 
 
 object Assets {
+    private const val baseImagePath = "/resources/images"
+
     lateinit var llama: BufferedImage
         private set
 
@@ -27,14 +29,14 @@ object Assets {
 
     fun loadImages(screenManager: ScreenManager) {
         with(screenManager) {
-            llama = loadImage("/images/llama.png")
+            llama = loadImage("$baseImagePath/llama.png")
 
-            block1 = loadImage("/images/block1.png")
-            block2 = loadImage("/images/block2.png")
-            block3 = loadImage("/images/block3.png")
-            walkway = loadImage("/images/grass_texture_pixel.png")
-            destination = loadImage("/images/hay.png")
-            pit = loadImage("/images/pit.png")
+            block1 = loadImage("$baseImagePath/block1.png")
+            block2 = loadImage("$baseImagePath/block2.png")
+            block3 = loadImage("$baseImagePath/block3.png")
+            walkway = loadImage("$baseImagePath/grass_texture_pixel.png")
+            destination = loadImage("$baseImagePath/hay.png")
+            pit = loadImage("$baseImagePath/pit.png")
         }
     }
 }
