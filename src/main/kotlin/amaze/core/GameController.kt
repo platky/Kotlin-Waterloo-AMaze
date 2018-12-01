@@ -15,6 +15,10 @@ class GameController(private val maze: Maze) {
     /** Keep track of sub-millisecond left-overs to reduce stutter */
     private var leftOverTime = 0L
 
+    init {
+        Assets.loadImages(screenManager)
+    }
+
     fun update(timeDelta: Long) {
         val fullTimeDelta = timeDelta + leftOverTime
         val timeDeltaMillis = fullTimeDelta / NANOS_PER_MILLI
