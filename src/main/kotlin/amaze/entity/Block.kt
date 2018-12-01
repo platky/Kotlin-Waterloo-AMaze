@@ -19,6 +19,6 @@ class Block : Entity() {
 
     private fun randomWallImage(): String {
         val random = Random().nextInt(3) + 1
-        return "/images/block$random.png"
+        return "/resources/images/block$random.png"
     }
 }

@@ -7,7 +7,7 @@ import java.awt.TexturePaint
 import javax.imageio.ImageIO
 
 object Walkway : Entity() {
-    private val image = ImageIO.read(javaClass.getResource("/images/grass_texture_pixel.png"))
+    private val image = ImageIO.read(javaClass.getResource("/resources/images/grass_texture_pixel.png"))
 
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
         val paint = TexturePaint(image, Rectangle(x, y, width, height))
