@@ -2,6 +2,7 @@ package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaState.*
 import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.entity.Position
 import java.awt.Graphics2D
 
 class Llama {
@@ -18,6 +19,11 @@ class Llama {
             height: Int,
             movePercentageComplete: Double
     ) {
+        val ratio = state.speed * movePercentageComplete
+        val deltaX = orientation.xDirection * width * ratio
+        val deltaY = orientation.yDirection * height * ratio
+        graphics.translate(deltaX, deltaY)
+
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         graphics.rotate(rotation, x + width / 2.0, y + height / 2.0)
         val llamaHeight = height * sizeCoefficient
@@ -28,7 +34,12 @@ class Llama {
             llamaWidth.toInt(), llamaHeight.toInt(), null)
     }
 
-    fun setCurrentAction(action: LlamaAction) {
+    fun setCurrentAction(action: LlamaAction, lastPosition: Position): Position {
+        val currentPosition = Position(
+                lastPosition.x + (orientation.xDirection * state.speed).toInt(),
+                lastPosition.y + (orientation.yDirection * state.speed).toInt()
+        )
+
         if (state == TURNING_LEFT) {
             orientation = orientation.turnLeft()
         } else if (state == TURNING_RIGHT) {
@@ -39,6 +50,7 @@ class Llama {
             LlamaAction.TURN_RIGHT -> TURNING_RIGHT
             LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
         }
+        return currentPosition
     }
 
     //TODO we may not need this function unless we want some transition validation
@@ -47,20 +59,20 @@ class Llama {
     }
 }
 
-enum class LlamaState(val rotation: Double) {
-    WAITING(0.0),
-    TURNING_LEFT(-Math.PI / 2),
-    TURNING_RIGHT(Math.PI / 2),
-    MOVING_FORWARD(0.0),
-    CRASHED(0.0),
-    COMPLETED(0.0)
+enum class LlamaState(val rotation: Double, val speed: Double) {
+    WAITING(0.0, 0.0),
+    TURNING_LEFT(-Math.PI / 2, 0.0),
+    TURNING_RIGHT(Math.PI / 2, 0.0),
+    MOVING_FORWARD(0.0, 1.0),
+    CRASHED(0.0, 0.0),
+    COMPLETED(0.0, 0.0)
 }
 
-enum class Orientation(val radians: Double) {
-    NORTH(0.0),
-    WEST(-Math.PI / 2),
-    SOUTH(-Math.PI),
-    EAST(-3 * Math.PI / 2);
+private enum class Orientation(val radians: Double, val xDirection: Double, val yDirection: Double) {
+    NORTH(0.0, 0.0, -1.0),
+    WEST(-Math.PI / 2, -1.0, 0.0),
+    SOUTH(-Math.PI, 0.0, 1.0),
+    EAST(-3 * Math.PI / 2, 1.0, 0.0);
 
     fun turnLeft(): Orientation = when (this) {
         NORTH -> WEST

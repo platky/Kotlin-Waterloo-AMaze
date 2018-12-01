@@ -9,9 +9,9 @@ import main.kotlin.amaze.toMaze
 private val puzzleDefinition = """
     XDXXXXX
     XOOXXXX
-    XXOXXXX
-    XXOOOOX
     XXSXXXX
+    XXOOOOX
+    XXXXXXX
 """.trimIndent()
 
 fun main(args: Array<String>) {
@@ -20,6 +20,11 @@ fun main(args: Array<String>) {
 
 class Puzzle1 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return if (Math.random() > 0.5) LlamaAction.TURN_RIGHT else LlamaAction.TURN_LEFT
+        val random = Math.random()
+        return when {
+            random < 0.3 -> LlamaAction.TURN_RIGHT
+            random < 0.6 -> LlamaAction.TURN_LEFT
+            else -> LlamaAction.MOVE_FORWARD
+        }
     }
 }
