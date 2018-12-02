@@ -1,5 +1,7 @@
 package main.kotlin.amaze
 
+data class Position(val column: Int, val row: Int)
+
 interface LlamaController {
     fun getNextMove(maze: Maze): LlamaAction
 }

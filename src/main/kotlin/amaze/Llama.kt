@@ -2,7 +2,6 @@ package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaState.*
 import main.kotlin.amaze.core.Assets
-import main.kotlin.amaze.entity.Position
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
@@ -11,9 +10,9 @@ private const val deadMovementCutOff = 0.5
 private const val deadImageCorrectionFactor = 0.8
 
 class Llama {
-
     private var state = WAITING
-    private var orientation = Orientation.NORTH
+    var orientation = Orientation.NORTH
+        private set
 
     fun isDead(): Boolean = state == CRASHED
 
@@ -82,8 +81,8 @@ class Llama {
 
     fun getNextPosition(currentPosition: Position): Position {
         return Position(
-                currentPosition.x + (orientation.xDirection * state.speed).toInt(),
-                currentPosition.y + (orientation.yDirection * state.speed).toInt()
+                currentPosition.column + (orientation.xDirection * state.speed).toInt(),
+                currentPosition.row + (orientation.yDirection * state.speed).toInt()
         )
     }
 
@@ -124,7 +123,7 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     COMPLETED(0.0, 0.0)
 }
 
-private enum class Orientation(val radians: Double, val xDirection: Double, val yDirection: Double) {
+enum class Orientation(val radians: Double, val xDirection: Double, val yDirection: Double) {
     NORTH(0.0, 0.0, -1.0),
     WEST(-Math.PI / 2, -1.0, 0.0),
     SOUTH(-Math.PI, 0.0, 1.0),
