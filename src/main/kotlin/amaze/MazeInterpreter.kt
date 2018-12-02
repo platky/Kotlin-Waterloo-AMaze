@@ -1,12 +1,15 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.entity.*
+import java.util.*
 
 private const val START_BLOCK = 'S'
 private const val WALKWAY = 'O'
 private const val PIT = 'P'
 private const val DESTINATION = 'D'
 private const val BLOCK = 'X'
+
+private val random = Random()
 
 fun String.toMaze(controller: LlamaController): Maze {
     val rows = split("\n")
@@ -33,8 +36,13 @@ fun String.toMaze(controller: LlamaController): Maze {
     require(possibleStartingPositions.isNotEmpty()) { "Maze must have at least one starting block" }
     require(destinationPosition != null) { "Maze must have a destination block" }
 
+    val startingPosition = chooseRandomStartingPosition(possibleStartingPositions)
     // We can remove the non-null assertion (!!) when we upgrade to Kotlin 1.3 due to contracts
-    return Maze(entityGrid, controller, destinationPosition!!, possibleStartingPositions)
+    return Maze(entityGrid, controller, destinationPosition!!, startingPosition)
+}
+
+private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Position {
+    return possiblePositions[random.nextInt(possiblePositions.size)]
 }
 
 private fun Char.toEntity(): Entity = when (this) {

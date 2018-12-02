@@ -5,7 +5,6 @@ import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
 
-private val random = Random()
 private const val MILLIS_PER_MOVE = 1000L
 
 class Maze(
@@ -13,10 +12,10 @@ class Maze(
         private val controller: LlamaController,
         /** The destination where you're trying to get to */
         val destinationPosition: Position,
-        possibleStartingPositions: List<Position>
+        startingPosition: Position
 ) {
     /** The current llama position */
-    var llamaPosition: Position = chooseRandomStartingPosition(possibleStartingPositions)
+    var llamaPosition: Position = startingPosition
         private set
 
     private var gameTime = 0L
@@ -107,9 +106,5 @@ class Maze(
                 cellWidth, cellHeight,
                 movePercentageComplete
         )
-    }
-
-    private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Position {
-        return possiblePositions[random.nextInt(possiblePositions.size)]
     }
 }
