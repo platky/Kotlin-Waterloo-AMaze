@@ -6,8 +6,11 @@ import main.kotlin.amaze.entity.Position
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
+private const val sizeCoefficient = 0.6
+private const val deadMovementCutOff = 0.5
+private const val deadImageCorrectionFactor = 0.8
+
 class Llama {
-    private val sizeCoefficient = 0.6
 
     private var state = WAITING
     private var orientation = Orientation.NORTH
@@ -23,7 +26,7 @@ class Llama {
             movePercentageComplete: Double
     ) {
         graphics.renderTransformed(x, y, width, height, movePercentageComplete) {
-            val image = selectStateImageAsset(state)
+            val image = getLlamaImage(movePercentageComplete)
 
             val llamaHeight = height * sizeCoefficient
             val llamaWidth = (llamaHeight / image.height) * image.width
@@ -49,7 +52,11 @@ class Llama {
             movePercentageComplete: Double,
             render: Graphics2D.() -> Unit
     ) {
-        val ratio = state.speed * movePercentageComplete
+        val ratio = if (isDead() && movePercentageComplete > deadMovementCutOff) {
+            deadMovementCutOff * deadImageCorrectionFactor
+        } else {
+            state.speed * movePercentageComplete
+        }
         val deltaX = orientation.xDirection * width * ratio
         val deltaY = orientation.yDirection * height * ratio
         translate(deltaX, deltaY)
@@ -99,10 +106,11 @@ class Llama {
         this.state = state
     }
 
-    private fun selectStateImageAsset(state: LlamaState): BufferedImage {
-        return when(state) {
-            CRASHED -> Assets.llamaDead
-            else -> Assets.llama
+    private fun getLlamaImage(movePercentageComplete: Double): BufferedImage {
+        return if (state == CRASHED && movePercentageComplete > deadMovementCutOff) {
+            Assets.llamaDead
+        } else {
+            Assets.llama
         }
     }
 }
@@ -112,7 +120,7 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     TURNING_LEFT(-Math.PI / 2, 0.0),
     TURNING_RIGHT(Math.PI / 2, 0.0),
     MOVING_FORWARD(0.0, 1.0),
-    CRASHED(0.0, 0.1),
+    CRASHED(0.0, 0.7),
     COMPLETED(0.0, 0.0)
 }
 
