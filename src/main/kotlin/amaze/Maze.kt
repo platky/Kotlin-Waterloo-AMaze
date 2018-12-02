@@ -3,7 +3,6 @@ package main.kotlin.amaze
 import main.kotlin.amaze.entity.Entity
 import java.awt.Color
 import java.awt.Graphics2D
-import java.util.*
 
 private const val MILLIS_PER_MOVE = 1000L
 
@@ -67,14 +66,13 @@ class Maze(
     fun update(elapsedTimeMillis: Long) {
         gameTime += elapsedTimeMillis
 
-        if (llama.isDead()) return
-
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
             lastMoveTime += MILLIS_PER_MOVE
-            llamaPosition = llama.setCurrentAction(
-                    controller.getNextMove(this),
-                    llamaPosition
-            )
+
+            llamaPosition = llama.finishMove(llamaPosition)
+            if (llama.isDead()) return
+
+            llama.startMove(controller.getNextMove(this))
             val nextPosition = llama.getNextPosition(llamaPosition)
             getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
         }
