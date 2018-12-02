@@ -1,8 +1,6 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.entity.Entity
-import main.kotlin.amaze.entity.Position
-import main.kotlin.amaze.entity.StartBlock
 import java.awt.Color
 import java.awt.Graphics2D
 import java.util.*
@@ -10,7 +8,17 @@ import java.util.*
 private val random = Random()
 private const val MILLIS_PER_MOVE = 1000L
 
-class Maze(private val entityGrid: Array<Array<Entity>>, private val controller: LlamaController) {
+class Maze(
+        private val entityGrid: Array<Array<Entity>>,
+        private val controller: LlamaController,
+        /** The destination where you're trying to get to */
+        val destinationPosition: Position,
+        possibleStartingPositions: List<Position>
+) {
+    /** The current llama position */
+    var llamaPosition: Position = chooseRandomStartingPosition(possibleStartingPositions)
+        private set
+
     private var gameTime = 0L
     private var lastMoveTime = -MILLIS_PER_MOVE
 
@@ -18,21 +26,58 @@ class Maze(private val entityGrid: Array<Array<Entity>>, private val controller:
     val numRows = entityGrid.size
 
     private val llama = Llama()
-    var llamaPosition: Position = chooseRandomStartingPosition()
-        private set
+
+    fun getEntityAt(column: Int, row: Int): Entity = entityGrid[row][column]
+
+    fun getEntityInFrontOfLlama(): Entity {
+        return when(llama.orientation) {
+            Orientation.NORTH -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+            Orientation.EAST -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
+            Orientation.SOUTH -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
+            Orientation.WEST -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
+        }
+    }
+
+    fun getEntityBehindLlama(): Entity {
+        return when(llama.orientation) {
+            Orientation.NORTH -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
+            Orientation.EAST -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
+            Orientation.SOUTH -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+            Orientation.WEST -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
+        }
+    }
+
+    fun getEntityOnLeftSideOfLlama(): Entity {
+        return when(llama.orientation) {
+            Orientation.NORTH -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
+            Orientation.EAST -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+            Orientation.SOUTH -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
+            Orientation.WEST -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
+        }
+    }
+
+    fun getEntityOnRightSideOfLlama(): Entity {
+        return when(llama.orientation) {
+            Orientation.NORTH -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
+            Orientation.EAST -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
+            Orientation.SOUTH -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
+            Orientation.WEST -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+        }
+    }
 
     fun update(elapsedTimeMillis: Long) {
         gameTime += elapsedTimeMillis
 
         if (llama.isDead()) return
-        
+
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
             lastMoveTime += MILLIS_PER_MOVE
             llamaPosition = llama.setCurrentAction(
                     controller.getNextMove(this),
                     llamaPosition
             )
-            getEntity(llama.getNextPosition(llamaPosition)).interact(llama)
+            val nextPosition = llama.getNextPosition(llamaPosition)
+            getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
         }
     }
 
@@ -58,22 +103,13 @@ class Maze(private val entityGrid: Array<Array<Entity>>, private val controller:
 
         llama.draw(
                 graphics,
-                llamaPosition.x * cellWidth, llamaPosition.y * cellHeight,
+                llamaPosition.column * cellWidth, llamaPosition.row * cellHeight,
                 cellWidth, cellHeight,
                 movePercentageComplete
         )
     }
 
-    fun getEntity(position: Position): Entity = entityGrid[position.y][position.x]
-
-    private fun chooseRandomStartingPosition(): Position {
-        val possibleStartingPositions: MutableList<Position> = mutableListOf()
-        entityGrid.forEachIndexed { y, row ->
-            row.forEachIndexed { x, entity ->
-                if (entity == StartBlock) possibleStartingPositions.add(Position(x, y))
-            }
-        }
-
-        return possibleStartingPositions[random.nextInt(possibleStartingPositions.size)]
+    private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Position {
+        return possiblePositions[random.nextInt(possiblePositions.size)]
     }
 }
