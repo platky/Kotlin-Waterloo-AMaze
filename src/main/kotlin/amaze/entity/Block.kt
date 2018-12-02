@@ -17,7 +17,7 @@ class Block : Entity() {
     }
 
     override fun interact(llama: Llama) {
-        llama.transitionToState(LlamaState.CRASHED)
+        llama.transitionToState(LlamaState.CRASHING)
     }
 
     private fun randomBlockImage(): BufferedImage {
