@@ -37,11 +37,10 @@ fun String.toMaze(controller: LlamaController): Maze {
                 START_BLOCK -> possibleStartingPositions.add(Position(column, row))
                 DESTINATION -> destinationPosition = Position(column, row)
             }
-            val entity = char.toEntity()
-            if (entity is TemporaryTeleporterEntity) {
-                entity.position = Position(column, row)
+            val entity = char.toEntity(row, column)
+            if (entity is TemporaryTeleporterEntity)
                 teleporters.add(rows[row][column], entity)
-            }
+
             entity
         }
     }
@@ -51,8 +50,7 @@ fun String.toMaze(controller: LlamaController): Maze {
 
     teleporters.forEach {
         require(it.value.size == 2) { "Teleporters must exist in a pair" }
-        val teleporter1 = it.value[0]
-        val teleporter2 = it.value[1]
+        val (teleporter1, teleporter2) = it.value
         with(teleporter1.position) {
             entityGrid[row][column] = Teleporter(teleporter2.position)
         }
@@ -70,21 +68,20 @@ private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Pos
     return possiblePositions[random.nextInt(possiblePositions.size)]
 }
 
-private fun Char.toEntity(): Entity = when (this) {
+private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     BLOCK -> Block()
     START_BLOCK -> Walkway
     WALKWAY -> Walkway
     PIT -> Pit
     DESTINATION -> Destination
-    TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 -> TemporaryTeleporterEntity()
+    TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 ->
+        TemporaryTeleporterEntity(Position(column, row))
     else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
 }
 
 class InvalidMazeCharacterException(message: String) : UnsupportedOperationException(message)
 
-private class TemporaryTeleporterEntity : Entity() {
-    lateinit var position: Position
-
+private class TemporaryTeleporterEntity(val position: Position) : Entity() {
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {}
 
     override fun interact(llama: Llama) {}

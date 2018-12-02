@@ -2,7 +2,6 @@ package main.kotlin.amaze.core
 
 import java.awt.image.BufferedImage
 
-
 object Assets {
     private const val baseImagePath = "/resources/images"
 

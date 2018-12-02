@@ -9,7 +9,7 @@ private val puzzleDefinition = """
     XXOOOOOOOOXXOX
     XXOOOOXXXOXOOX
     XXXXXXPXOOXXXX
-    XXXOOOSOOOXXXX
+    XXXOOFSFOOXXXX
     XOOOOOXXXOOOOX
     XXXXXXXXXXXXXX
 """.trimIndent()
@@ -19,16 +19,12 @@ fun main(args: Array<String>) {
 }
 
 class Puzzle1 : LlamaController {
-    var move = UserLlamaAction.TURN_LEFT
-    override fun getNextMove(maze: Maze): UserLlamaAction {
-        /*val random = Math.random()
+    override fun getNextMove(maze: Maze): LlamaAction {
+        val random = Math.random()
         return when {
             random < 0.3 -> LlamaAction.TURN_RIGHT
             random < 0.6 -> LlamaAction.TURN_LEFT
             else -> LlamaAction.MOVE_FORWARD
-        }*/
-        val next = move
-        move = UserLlamaAction.MOVE_FORWARD
-        return next
+        }
     }
 }

@@ -12,6 +12,7 @@ private const val DEAD_IMAGE_CORRECTION_FACTOR = 0.8
 
 class Llama {
     private var state = WAITING
+    private var forcedDestination: Position? = null
     var orientation = Orientation.NORTH
         private set
 
@@ -81,6 +82,7 @@ class Llama {
 
         rotate(-rotation, x + width / 2.0, y + height / 2.0)
         translate(-deltaX, -deltaY)
+        resetTransparency()
     }
 
     private fun Graphics2D.setTransparency(movePercentageComplete: Double) {
@@ -90,6 +92,10 @@ class Llama {
             else -> return
         }
         this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency)
+    }
+
+    private fun Graphics2D.resetTransparency() {
+        this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1F)
     }
 
     fun isReadyForAnotherUserMove(): Boolean = when (state) {
@@ -106,10 +112,10 @@ class Llama {
 
     fun finishMove(lastPosition: Position): Position {
         updateOrientation()
-        val updatedPosition = if (state != CRASHING) {
-            getNextPosition(lastPosition)
-        } else {
-            lastPosition
+        val updatedPosition = when {
+            state == FADING_OUT -> getForcedDestination()
+            state != CRASHING -> getNextPosition(lastPosition)
+            else -> lastPosition
         }
         state = state.getNextState()
         return updatedPosition
@@ -120,6 +126,14 @@ class Llama {
                 currentPosition.column + (orientation.xDirection * state.speed).toInt(),
                 currentPosition.row + (orientation.yDirection * state.speed).toInt()
         )
+    }
+
+    private fun getForcedDestination(): Position {
+        require(forcedDestination != null) { "A forced destination must be set" }
+
+        val position = forcedDestination as Position
+        forcedDestination = null
+        return position
     }
 
     private fun updateOrientation() {
@@ -138,6 +152,13 @@ class Llama {
 
     fun transitionToState(state: LlamaState) {
         this.state = state
+    }
+
+    fun teleporterStateTransition(state: LlamaState, position: Position) {
+        if (this.state != MOVING_FORWARD)
+            return
+        transitionToState(state)
+        forcedDestination = position
     }
 
     private fun getLlamaImage(movePercentageComplete: Double): BufferedImage {
@@ -168,6 +189,9 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
         ENTERING_PIT -> FALLING
         FALLING -> DISAPPEARED
         CRASHING -> SLAUGHTERED
+        MOVING_ONTO_TELEPORTER -> FADING_OUT
+        FADING_OUT -> FADING_IN
+        FADING_IN -> WAITING
         else -> this
     }
 }
