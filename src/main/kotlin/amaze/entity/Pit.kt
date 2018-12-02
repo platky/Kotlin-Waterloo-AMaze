@@ -8,6 +8,7 @@ import java.awt.Graphics2D
 object Pit : Entity() {
 
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
+        graphics.drawImage(Assets.walkway, x, y, width, height, null)
         graphics.drawImage(Assets.pit, x, y, width, height, null)
     }
 
