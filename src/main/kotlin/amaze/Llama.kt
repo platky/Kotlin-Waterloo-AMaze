@@ -29,7 +29,7 @@ class Llama {
 
             val image = getLlamaImage(movePercentageComplete)
 
-            val llamaHeight = if (state == FAllING) {
+            val llamaHeight = if (state == FALLING) {
                 height * SIZE_COEFFICIENT * (1 - movePercentageComplete)
             } else {
                 height * SIZE_COEFFICIENT
@@ -143,13 +143,13 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     CRASHING(0.0, 1.0),
     SLAUGHTERED(0.0, 0.0),
     ENTERING_PIT(0.0, 1.0),
-    FAllING(0.0, 0.0),
+    FALLING(0.0, 0.0),
     DISAPPEARED(0.0, 0.0),
     VICTORIOUS(0.0, 0.0);
 
     fun getNextState(): LlamaState = when (this) {
-        ENTERING_PIT -> FAllING
-        FAllING -> DISAPPEARED
+        ENTERING_PIT -> FALLING
+        FALLING -> DISAPPEARED
         CRASHING -> SLAUGHTERED
         else -> this
     }
