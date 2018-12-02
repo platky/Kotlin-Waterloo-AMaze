@@ -12,6 +12,6 @@ object Destination : Entity() {
     }
 
     override fun interact(llama: Llama) {
-        llama.transitionToState(LlamaState.COMPLETED)
+        llama.transitionToState(LlamaState.VICTORIOUS)
     }
 }

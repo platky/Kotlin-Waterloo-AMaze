@@ -76,9 +76,9 @@ class Maze(
             lastMoveTime += MILLIS_PER_MOVE
 
             llamaPosition = llama.finishMove(llamaPosition)
-            if (llama.isDead()) return
+            if (!llama.isReadyForAnotherUserMove()) return
 
-            llama.startMove(controller.getNextMove(this))
+            llama.startUserMove(controller.getNextMove(this))
             val nextPosition = llama.getNextPosition(llamaPosition)
             getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
         }

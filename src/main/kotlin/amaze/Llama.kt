@@ -15,9 +15,9 @@ class Llama {
     var orientation = Orientation.NORTH
         private set
 
+    fun isDead(): Boolean = state == SLAUGHTERED || state == DISAPPEARED
     fun isWalkingOntoTeleport(): Boolean = state == MOVING_ONTO_TELEPORTER
     fun isFadingOut(): Boolean = state == FADING_OUT
-    fun isDead(): Boolean = state.isDead
 
     fun draw(
             graphics: Graphics2D,
@@ -32,7 +32,7 @@ class Llama {
 
             val image = getLlamaImage(movePercentageComplete)
 
-            val llamaHeight = if (state == FAllING) {
+            val llamaHeight = if (state == FALLING) {
                 height * SIZE_COEFFICIENT * (1 - movePercentageComplete)
             } else {
                 height * SIZE_COEFFICIENT
@@ -62,7 +62,7 @@ class Llama {
     ) {
         val ratio = when {
             state == SLAUGHTERED
-                    || state == CRASHED && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> {
+                    || state == CRASHING && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> {
                 DEAD_MOVEMENT_CUTOFF * DEAD_IMAGE_CORRECTION_FACTOR
             }
             else -> state.speed * movePercentageComplete
@@ -92,16 +92,21 @@ class Llama {
         this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency)
     }
 
+    fun isReadyForAnotherUserMove(): Boolean = when (state) {
+        WAITING, TURNING_LEFT, TURNING_RIGHT, MOVING_FORWARD -> true
+        else -> false
+    }
+
     /**
      * Sets the current action and returns the current position given the last position.
      */
-    fun startMove(action: LlamaAction) {
+    fun startUserMove(action: LlamaAction) {
         state = action.toState()
     }
 
     fun finishMove(lastPosition: Position): Position {
         updateOrientation()
-        val updatedPosition = if (state != CRASHED) {
+        val updatedPosition = if (state != CRASHING) {
             getNextPosition(lastPosition)
         } else {
             lastPosition
@@ -126,12 +131,9 @@ class Llama {
     }
 
     private fun LlamaAction.toState(): LlamaState = when (this) {
-        UserLlamaAction.TURN_LEFT -> TURNING_LEFT
-        UserLlamaAction.TURN_RIGHT -> TURNING_RIGHT
-        UserLlamaAction.MOVE_FORWARD -> MOVING_FORWARD
-        EngineLlamaAction.FADE_IN -> FADING_IN
-        EngineLlamaAction.FADE_OUT -> FADING_OUT
-        else -> WAITING
+        LlamaAction.TURN_LEFT -> TURNING_LEFT
+        LlamaAction.TURN_RIGHT -> TURNING_RIGHT
+        LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
     }
 
     fun transitionToState(state: LlamaState) {
@@ -141,31 +143,31 @@ class Llama {
     private fun getLlamaImage(movePercentageComplete: Double): BufferedImage {
         return when {
             state == SLAUGHTERED -> Assets.llamaDead
-            state == CRASHED && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> Assets.llamaDead
+            state == CRASHING && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> Assets.llamaDead
             else -> Assets.llama
         }
     }
 }
 
-enum class LlamaState(val rotation: Double, val speed: Double, val isDead: Boolean) {
-    WAITING(0.0, 0.0, false),
-    TURNING_LEFT(-Math.PI / 2, 0.0, false),
-    TURNING_RIGHT(Math.PI / 2, 0.0, false),
-    MOVING_FORWARD(0.0, 1.0, false),
-    CRASHED(0.0, 1.0, true),
-    SLAUGHTERED(0.0, 0.0, true),
-    ENTERING_PIT(0.0, 1.0, true),
-    FAllING(0.0, 0.0, true),
-    DISAPPEARED(0.0, 0.0, true),
-    COMPLETED(0.0, 0.0, false),
-    MOVING_ONTO_TELEPORTER(0.0, 1.0, false),
-    FADING_OUT(0.0, 0.0, false),
-    FADING_IN(0.0, 0.0, false);
+enum class LlamaState(val rotation: Double, val speed: Double) {
+    WAITING(0.0, 0.0),
+    TURNING_LEFT(-Math.PI / 2, 0.0),
+    TURNING_RIGHT(Math.PI / 2, 0.0),
+    MOVING_FORWARD(0.0, 1.0),
+    CRASHING(0.0, 1.0),
+    SLAUGHTERED(0.0, 0.0),
+    ENTERING_PIT(0.0, 1.0),
+    FALLING(0.0, 0.0),
+    DISAPPEARED(0.0, 0.0),
+    VICTORIOUS(0.0, 0.0),
+    MOVING_ONTO_TELEPORTER(0.0, 1.0),
+    FADING_OUT(0.0, 0.0),
+    FADING_IN(0.0, 0.0);
 
     fun getNextState(): LlamaState = when (this) {
-        ENTERING_PIT -> FAllING
-        FAllING -> DISAPPEARED
-        CRASHED -> SLAUGHTERED
+        ENTERING_PIT -> FALLING
+        FALLING -> DISAPPEARED
+        CRASHING -> SLAUGHTERED
         else -> this
     }
 }
