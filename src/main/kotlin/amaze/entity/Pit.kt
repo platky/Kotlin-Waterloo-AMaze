@@ -12,6 +12,6 @@ object Pit : Entity() {
     }
 
     override fun interact(llama: Llama) {
-        llama.transitionToState(LlamaState.CRASHED)
+        llama.transitionToState(LlamaState.ENTERING_PIT)
     }
 }

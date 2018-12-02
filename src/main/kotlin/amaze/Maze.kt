@@ -72,17 +72,15 @@ class Maze(
     fun update(elapsedTimeMillis: Long) {
         gameTime += elapsedTimeMillis
 
-        if (llama.isDead()) return
-
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
-            val nextMove = getNextMove()
             lastMoveTime += MILLIS_PER_MOVE
-            llamaPosition = llama.setCurrentAction(nextMove, llamaPosition)
-            if (nextMove !is EngineLlamaAction) {
-                val nextPosition = llama.getNextPosition(llamaPosition)
-                getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
-            }
 
+            llamaPosition = llama.finishMove(llamaPosition)
+            if (llama.isDead()) return
+
+            llama.startMove(controller.getNextMove(this))
+            val nextPosition = llama.getNextPosition(llamaPosition)
+            getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
         }
     }
 
