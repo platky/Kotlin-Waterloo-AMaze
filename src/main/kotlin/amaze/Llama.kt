@@ -5,16 +5,16 @@ import main.kotlin.amaze.core.Assets
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-private const val sizeCoefficient = 0.6
-private const val deadMovementCutOff = 0.5
-private const val deadImageCorrectionFactor = 0.8
+private const val SIZE_COEFFICIENT = 0.6
+private const val DEAD_MOVEMENT_CUTOFF = 0.5
+private const val DEAD_IMAGE_CORRECTION_FACTOR = 0.8
 
 class Llama {
     private var state = WAITING
     var orientation = Orientation.NORTH
         private set
 
-    fun isDead(): Boolean = state == CRASHED
+    fun isDead(): Boolean = state.isDead
 
     fun draw(
             graphics: Graphics2D,
@@ -25,9 +25,15 @@ class Llama {
             movePercentageComplete: Double
     ) {
         graphics.renderTransformed(x, y, width, height, movePercentageComplete) {
+            if (state == DISAPPEARED) return
+
             val image = getLlamaImage(movePercentageComplete)
 
-            val llamaHeight = height * sizeCoefficient
+            val llamaHeight = if (state == FAllING) {
+                height * SIZE_COEFFICIENT * (1 - movePercentageComplete)
+            } else {
+                height * SIZE_COEFFICIENT
+            }
             val llamaWidth = (llamaHeight / image.height) * image.width
             graphics.drawImage(
                     image,
@@ -51,11 +57,14 @@ class Llama {
             movePercentageComplete: Double,
             render: Graphics2D.() -> Unit
     ) {
-        val ratio = if (isDead() && movePercentageComplete > deadMovementCutOff) {
-            deadMovementCutOff * deadImageCorrectionFactor
-        } else {
-            state.speed * movePercentageComplete
+        val ratio = when {
+            state == SLAUGHTERED
+                    || state == CRASHED && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> {
+                DEAD_MOVEMENT_CUTOFF * DEAD_IMAGE_CORRECTION_FACTOR
+            }
+            else -> state.speed * movePercentageComplete
         }
+
         val deltaX = orientation.xDirection * width * ratio
         val deltaY = orientation.yDirection * height * ratio
         translate(deltaX, deltaY)
@@ -72,11 +81,19 @@ class Llama {
     /**
      * Sets the current action and returns the current position given the last position.
      */
-    fun setCurrentAction(action: LlamaAction, lastPosition: Position): Position {
-        val currentPosition = getNextPosition(lastPosition)
-        updateOrientation()
+    fun startMove(action: LlamaAction) {
         state = action.toState()
-        return currentPosition
+    }
+
+    fun finishMove(lastPosition: Position): Position {
+        updateOrientation()
+        val updatedPosition = if (state != CRASHED) {
+            getNextPosition(lastPosition)
+        } else {
+            lastPosition
+        }
+        state = state.getNextState()
+        return updatedPosition
     }
 
     fun getNextPosition(currentPosition: Position): Position {
@@ -100,27 +117,37 @@ class Llama {
         LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
     }
 
-    //TODO we may not need this function unless we want some transition validation
     fun transitionToState(state: LlamaState) {
         this.state = state
     }
 
     private fun getLlamaImage(movePercentageComplete: Double): BufferedImage {
-        return if (state == CRASHED && movePercentageComplete > deadMovementCutOff) {
-            Assets.llamaDead
-        } else {
-            Assets.llama
+        return when {
+            state == SLAUGHTERED -> Assets.llamaDead
+            state == CRASHED && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> Assets.llamaDead
+            else -> Assets.llama
         }
     }
 }
 
-enum class LlamaState(val rotation: Double, val speed: Double) {
-    WAITING(0.0, 0.0),
-    TURNING_LEFT(-Math.PI / 2, 0.0),
-    TURNING_RIGHT(Math.PI / 2, 0.0),
-    MOVING_FORWARD(0.0, 1.0),
-    CRASHED(0.0, 0.7),
-    COMPLETED(0.0, 0.0)
+enum class LlamaState(val rotation: Double, val speed: Double, val isDead: Boolean) {
+    WAITING(0.0, 0.0, false),
+    TURNING_LEFT(-Math.PI / 2, 0.0, false),
+    TURNING_RIGHT(Math.PI / 2, 0.0, false),
+    MOVING_FORWARD(0.0, 1.0, false),
+    CRASHED(0.0, 1.0, true),
+    SLAUGHTERED(0.0, 0.0, true),
+    ENTERING_PIT(0.0, 1.0, true),
+    FAllING(0.0, 0.0, true),
+    DISAPPEARED(0.0, 0.0, true),
+    COMPLETED(0.0, 0.0, false);
+
+    fun getNextState(): LlamaState = when (this) {
+        ENTERING_PIT -> FAllING
+        FAllING -> DISAPPEARED
+        CRASHED -> SLAUGHTERED
+        else -> this
+    }
 }
 
 enum class Orientation(val radians: Double, val xDirection: Double, val yDirection: Double) {
