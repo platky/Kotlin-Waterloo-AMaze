@@ -1,10 +1,7 @@
 package main.kotlin.amaze.puzzles
 
-import main.kotlin.amaze.Maze
-import main.kotlin.amaze.LlamaAction
-import main.kotlin.amaze.LlamaController
+import main.kotlin.amaze.*
 import main.kotlin.amaze.core.GameController
-import main.kotlin.amaze.toMaze
 
 private val puzzleDefinition = """
     XDXXXXXXXXXXXX
@@ -12,7 +9,7 @@ private val puzzleDefinition = """
     XXOOOOOOOOXXOX
     XXOOOOXXXPXOOX
     XXXXXXXXOOXXXX
-    XXXOOOSOOOXXXX
+    XXXOOFSFOOXXXX
     XOOOOOXXXOOOOX
     XXXXXXXXXXXXXX
 """.trimIndent()
@@ -22,12 +19,16 @@ fun main(args: Array<String>) {
 }
 
 class Puzzle1 : LlamaController {
-    override fun getNextMove(maze: Maze): LlamaAction {
-        val random = Math.random()
+    var move = UserLlamaAction.TURN_LEFT
+    override fun getNextMove(maze: Maze): UserLlamaAction {
+        /*val random = Math.random()
         return when {
             random < 0.3 -> LlamaAction.TURN_RIGHT
             random < 0.6 -> LlamaAction.TURN_LEFT
             else -> LlamaAction.MOVE_FORWARD
-        }
+        }*/
+        val next = move
+        move = UserLlamaAction.MOVE_FORWARD
+        return next
     }
 }

@@ -1,11 +1,16 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.entity.Entity
+import main.kotlin.amaze.entity.Teleporter
 import java.awt.Color
 import java.awt.Graphics2D
-import java.util.*
 
 private const val MILLIS_PER_MOVE = 1000L
+
+enum class EngineLlamaAction : LlamaAction {
+    FADE_IN,
+    FADE_OUT
+}
 
 class Maze(
         private val entityGrid: Array<Array<Entity>>,
@@ -70,13 +75,26 @@ class Maze(
         if (llama.isDead()) return
 
         if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
+            val nextMove = getNextMove()
             lastMoveTime += MILLIS_PER_MOVE
-            llamaPosition = llama.setCurrentAction(
-                    controller.getNextMove(this),
-                    llamaPosition
-            )
-            val nextPosition = llama.getNextPosition(llamaPosition)
-            getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
+            llamaPosition = llama.setCurrentAction(nextMove, llamaPosition)
+            if (nextMove !is EngineLlamaAction) {
+                val nextPosition = llama.getNextPosition(llamaPosition)
+                getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
+            }
+
+        }
+    }
+
+    private fun getNextMove(): LlamaAction {
+        return when {
+            llama.isWalkingOntoTeleport() -> EngineLlamaAction.FADE_OUT
+            llama.isFadingOut() -> {
+                val teleporter = getEntityAt(llamaPosition.column, llamaPosition.row) as Teleporter
+                llamaPosition = teleporter.endpoint
+                EngineLlamaAction.FADE_IN
+            }
+            else -> controller.getNextMove(this)
         }
     }
 

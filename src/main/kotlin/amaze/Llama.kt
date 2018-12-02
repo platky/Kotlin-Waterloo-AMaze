@@ -2,6 +2,7 @@ package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaState.*
 import main.kotlin.amaze.core.Assets
+import java.awt.AlphaComposite
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
@@ -15,6 +16,8 @@ class Llama {
         private set
 
     fun isDead(): Boolean = state == CRASHED
+    fun isWalkingOntoTeleport(): Boolean = state == MOVING_ONTO_TELEPORTER
+    fun isFadingOut(): Boolean = state == FADING_OUT
 
     fun draw(
             graphics: Graphics2D,
@@ -63,10 +66,21 @@ class Llama {
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         rotate(rotation, x + width / 2.0, y + height / 2.0)
 
+        setTransparency(movePercentageComplete)
+
         render()
 
         rotate(-rotation, x + width / 2.0, y + height / 2.0)
         translate(-deltaX, -deltaY)
+    }
+
+    private fun Graphics2D.setTransparency(movePercentageComplete: Double) {
+        val transparency: Float = when(state) {
+            FADING_OUT -> (1.0 - movePercentageComplete).toFloat()
+            FADING_IN -> movePercentageComplete.toFloat()
+            else -> return
+        }
+        this.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency)
     }
 
     /**
@@ -95,9 +109,12 @@ class Llama {
     }
 
     private fun LlamaAction.toState(): LlamaState = when (this) {
-        LlamaAction.TURN_LEFT -> TURNING_LEFT
-        LlamaAction.TURN_RIGHT -> TURNING_RIGHT
-        LlamaAction.MOVE_FORWARD -> MOVING_FORWARD
+        UserLlamaAction.TURN_LEFT -> TURNING_LEFT
+        UserLlamaAction.TURN_RIGHT -> TURNING_RIGHT
+        UserLlamaAction.MOVE_FORWARD -> MOVING_FORWARD
+        EngineLlamaAction.FADE_IN -> FADING_IN
+        EngineLlamaAction.FADE_OUT -> FADING_OUT
+        else -> WAITING
     }
 
     //TODO we may not need this function unless we want some transition validation
@@ -120,7 +137,10 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     TURNING_RIGHT(Math.PI / 2, 0.0),
     MOVING_FORWARD(0.0, 1.0),
     CRASHED(0.0, 0.7),
-    COMPLETED(0.0, 0.0)
+    COMPLETED(0.0, 0.0),
+    MOVING_ONTO_TELEPORTER(0.0, 1.0),
+    FADING_OUT(0.0, 0.0),
+    FADING_IN(0.0, 0.0)
 }
 
 enum class Orientation(val radians: Double, val xDirection: Double, val yDirection: Double) {
