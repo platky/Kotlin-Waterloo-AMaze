@@ -7,10 +7,10 @@ import main.kotlin.amaze.core.Assets
 import java.awt.Graphics2D
 
 class Teleporter(val endpoint: Position) : Entity() {
-    override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
+    override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         with (graphics) {
-            drawImage(Assets.walkway, x, y, width, height, null)
-            drawImage(Assets.teleporter, x, y, width, height, null)
+            drawImage(Assets.walkway, 0, 0, width, height, null)
+            drawImage(Assets.teleporter, 0, 0, width, height, null)
         }
     }
 

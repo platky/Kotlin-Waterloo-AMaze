@@ -77,21 +77,19 @@ class Llama {
     }
 
     fun teleporterStateTransition(state: LlamaState, position: Position) {
-        if (this.state != MOVING_FORWARD)
-            return
+        if (this.state != MOVING_FORWARD) return
+
         transitionToState(state)
         forcedDestination = position
     }
 
     fun draw(
             graphics: Graphics2D,
-            x: Int,
-            y: Int,
             width: Int,
             height: Int,
             movePercentageComplete: Double
     ) {
-        graphics.renderTransformed(x, y, width, height, movePercentageComplete) {
+        graphics.renderTransformed(width, height, movePercentageComplete) {
             if (state == DISAPPEARED) return
 
             val image = getLlamaImage(movePercentageComplete)
@@ -104,8 +102,8 @@ class Llama {
             val llamaWidth = (llamaHeight / image.height) * image.width
             drawImage(
                     image,
-                    (x + (width - llamaWidth) / 2).toInt(),
-                    (y + (height - llamaHeight) / 2).toInt(),
+                    ((width - llamaWidth) / 2).toInt(),
+                    ((height - llamaHeight) / 2).toInt(),
                     llamaWidth.toInt(), llamaHeight.toInt(),
                     null
             )
@@ -117,8 +115,6 @@ class Llama {
      * [render] after which the transformation is reversed to leave the graphics in a good state.
      */
     private inline fun Graphics2D.renderTransformed(
-            x: Int,
-            y: Int,
             width: Int,
             height: Int,
             movePercentageComplete: Double,
@@ -130,14 +126,14 @@ class Llama {
         translate(deltaX, deltaY)
 
         val rotation = orientation.radians + state.rotation * movePercentageComplete
-        rotate(rotation, x + width / 2.0, y + height / 2.0)
+        rotate(rotation, width / 2.0, height / 2.0)
 
         setTransparency(movePercentageComplete)
 
         render()
 
         resetTransparency()
-        rotate(-rotation, x + width / 2.0, y + height / 2.0)
+        rotate(-rotation, width / 2.0, height / 2.0)
         translate(-deltaX, -deltaY)
     }
 

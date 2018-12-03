@@ -84,7 +84,7 @@ private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
 class InvalidMazeCharacterException(message: String) : UnsupportedOperationException(message)
 
 private class TemporaryTeleporterEntity(val position: Position) : Entity() {
-    override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {}
+    override fun draw(graphics: Graphics2D, width: Int, height: Int) {}
 
     override fun interact(llama: Llama) {}
 }

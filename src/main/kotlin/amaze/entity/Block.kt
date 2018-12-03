@@ -10,10 +10,10 @@ import java.util.*
 class Block : Entity() {
     private val image by lazy { randomBlockImage() }
 
-    override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
+    override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         with (graphics) {
-            drawImage(Assets.walkway, x, y, width, height, null)
-            drawImage(image, x, y, width, height, null)
+            drawImage(Assets.walkway, 0, 0, width, height, null)
+            drawImage(image, 0, 0, width, height, null)
         }
     }
 

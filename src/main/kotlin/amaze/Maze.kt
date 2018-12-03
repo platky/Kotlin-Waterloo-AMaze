@@ -91,7 +91,12 @@ class Maze(
 
         entityGrid.forEachIndexed { y, row ->
             row.forEachIndexed { x, entity ->
-                entity.draw(graphics, x * cellWidth, y * cellHeight, cellWidth, cellHeight)
+                val horizontalTranslation = x * cellWidth
+                val verticalTranslation = y * cellHeight
+
+                graphics.translate(horizontalTranslation, verticalTranslation)
+                entity.draw(graphics, cellWidth, cellHeight)
+                graphics.translate(-horizontalTranslation, -verticalTranslation)
             }
         }
 
@@ -102,12 +107,13 @@ class Maze(
             currentMoveTime.toDouble() / MILLIS_PER_MOVE
         }
 
-        llama.draw(
-                graphics,
-                llamaPosition.column * cellWidth, llamaPosition.row * cellHeight,
-                cellWidth, cellHeight,
-                movePercentageComplete
-        )
+        val horizontalTranslation = llamaPosition.column * cellWidth
+        val verticalTranslation = llamaPosition.row * cellHeight
+        graphics.translate(horizontalTranslation, verticalTranslation)
+
+        llama.draw(graphics, cellWidth, cellHeight, movePercentageComplete)
+
+        graphics.translate(-horizontalTranslation, -verticalTranslation)
 
         if (llama.isDead()) {
             graphics.drawInCenter(Assets.ouch, width, height, 0.75)
