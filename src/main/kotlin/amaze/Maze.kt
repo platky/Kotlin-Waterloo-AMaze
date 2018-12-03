@@ -83,23 +83,38 @@ class Maze(
     }
 
     fun draw(graphics: Graphics2D, width: Int, height: Int) {
-        graphics.color = Color.GRAY
-        graphics.fillRect(0, 0, width, height)
-
         val cellWidth = width / numColumns
         val cellHeight = height / numRows
 
+        with (graphics) {
+            color = Color.GRAY
+            fillRect(0, 0, width, height)
+
+            drawEntities(cellWidth, cellHeight)
+            drawLlama(cellWidth, cellHeight)
+
+            if (llama.isDead()) {
+                drawInCenter(Assets.ouch, width, height, 0.75)
+            } else if (llama.isVictorious()) {
+                drawInCenter(Assets.yippee, width, height, 0.75)
+            }
+        }
+    }
+
+    private fun Graphics2D.drawEntities(cellWidth: Int, cellHeight: Int) {
         entityGrid.forEachIndexed { y, row ->
             row.forEachIndexed { x, entity ->
                 val horizontalTranslation = x * cellWidth
                 val verticalTranslation = y * cellHeight
 
-                graphics.translate(horizontalTranslation, verticalTranslation)
-                entity.draw(graphics, cellWidth, cellHeight)
-                graphics.translate(-horizontalTranslation, -verticalTranslation)
+                translate(horizontalTranslation, verticalTranslation)
+                entity.draw(this, cellWidth, cellHeight)
+                translate(-horizontalTranslation, -verticalTranslation)
             }
         }
+    }
 
+    private fun Graphics2D.drawLlama(cellWidth: Int, cellHeight: Int) {
         val currentMoveTime = gameTime - lastMoveTime
         val movePercentageComplete = if (currentMoveTime >= MILLIS_PER_MOVE) {
             1.0
@@ -109,17 +124,10 @@ class Maze(
 
         val horizontalTranslation = llamaPosition.column * cellWidth
         val verticalTranslation = llamaPosition.row * cellHeight
-        graphics.translate(horizontalTranslation, verticalTranslation)
 
-        llama.draw(graphics, cellWidth, cellHeight, movePercentageComplete)
-
-        graphics.translate(-horizontalTranslation, -verticalTranslation)
-
-        if (llama.isDead()) {
-            graphics.drawInCenter(Assets.ouch, width, height, 0.75)
-        } else if (llama.isVictorious()) {
-            graphics.drawInCenter(Assets.yippee, width, height, 0.75)
-        }
+        translate(horizontalTranslation, verticalTranslation)
+        llama.draw(this, cellWidth, cellHeight, movePercentageComplete)
+        translate(-horizontalTranslation, -verticalTranslation)
     }
 
     private fun Graphics2D.drawInCenter(
