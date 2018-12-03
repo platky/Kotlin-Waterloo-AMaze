@@ -13,6 +13,7 @@ class Block : Entity() {
     }
 
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
+        graphics.drawImage(Assets.walkway, x, y, width, height, null)
         graphics.drawImage(image, x, y, width, height, null)
     }
 

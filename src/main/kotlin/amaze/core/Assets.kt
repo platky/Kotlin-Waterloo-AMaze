@@ -32,6 +32,12 @@ object Assets {
     lateinit var teleporter: BufferedImage
         private set
 
+    lateinit var yippee: BufferedImage
+        private set
+
+    lateinit var ouch: BufferedImage
+        private set
+
     fun loadImages(screenManager: ScreenManager) {
         with(screenManager) {
             llama = loadImage("$baseImagePath/llama.png")
@@ -40,10 +46,13 @@ object Assets {
             block1 = loadImage("$baseImagePath/block1.png")
             block2 = loadImage("$baseImagePath/block2.png")
             block3 = loadImage("$baseImagePath/block3.png")
-            walkway = loadImage("$baseImagePath/grass_texture_pixel.png")
+            walkway = loadImage("$baseImagePath/8bitgrass.png")
             destination = loadImage("$baseImagePath/hay.png")
             pit = loadImage("$baseImagePath/pit.png")
             teleporter = loadImage("$baseImagePath/teleporter.png")
+
+            yippee = loadImage("$baseImagePath/yippee.png")
+            ouch = loadImage("$baseImagePath/ouch.png")
         }
     }
 }
