@@ -73,6 +73,8 @@ class Llama {
     }
 
     fun transitionToState(state: LlamaState) {
+        if (state == CRASHING) Assets.playSound(Assets.DYING_SOUND)
+
         this.state = state
     }
 
