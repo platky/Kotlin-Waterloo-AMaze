@@ -10,7 +10,7 @@ private val puzzleDefinition = """
     XXOOOOXXXOXOOX
     XXXXXXDXOOXXXX
     XXXOOFSFOOXXXX
-    XOOOOOXXXOOOOX
+    XOOOOOPXXOOOOX
     XXXXXXXXXXXXXX
 """.trimIndent()
 

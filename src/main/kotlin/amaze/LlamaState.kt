@@ -1,5 +1,7 @@
 package main.kotlin.amaze
 
+import main.kotlin.amaze.core.Assets
+
 enum class LlamaState(val rotation: Double, val speed: Double) {
     WAITING(0.0, 0.0),
     TURNING_LEFT(-Math.PI / 2, 0.0),
@@ -17,13 +19,22 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     FADING_IN(0.0, 0.0);
 
     fun getNextState(): LlamaState = when (this) {
-        ENTERING_PIT -> FALLING
+        ENTERING_PIT -> {
+            Assets.playSound(Assets.FALLING_SOUND)
+            FALLING
+        }
         FALLING -> DISAPPEARED
         CRASHING -> SLAUGHTERED
-        MOVING_ONTO_TELEPORTER -> FADING_OUT
+        MOVING_ONTO_TELEPORTER ->  {
+            Assets.playSound(Assets.TELEPORTING_SOUND)
+            FADING_OUT
+        }
         FADING_OUT -> FADING_IN
         FADING_IN -> WAITING
-        TO_VICTORY_AND_BEYOND -> VICTORIOUS
+        TO_VICTORY_AND_BEYOND -> {
+            Assets.playVictoriousSound()
+            VICTORIOUS
+        }
         else -> this
     }
 }
