@@ -38,8 +38,9 @@ fun String.toMaze(controller: LlamaController): Maze {
                 DESTINATION -> destinationPosition = Position(column, row)
             }
             val entity = char.toEntity(row, column)
-            if (entity is TemporaryTeleporterEntity)
+            if (entity is TemporaryTeleporterEntity) {
                 teleporters.add(rows[row][column], entity)
+            }
 
             entity
         }
@@ -74,15 +75,16 @@ private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     WALKWAY -> Walkway
     PIT -> Pit
     DESTINATION -> Destination
-    TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 ->
+    TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 -> {
         TemporaryTeleporterEntity(Position(column, row))
+    }
     else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
 }
 
 class InvalidMazeCharacterException(message: String) : UnsupportedOperationException(message)
 
 private class TemporaryTeleporterEntity(val position: Position) : Entity() {
-    override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {}
+    override fun draw(graphics: Graphics2D, width: Int, height: Int) {}
 
     override fun interact(llama: Llama) {}
 }
@@ -90,9 +92,5 @@ private class TemporaryTeleporterEntity(val position: Position) : Entity() {
 private fun MutableMap<Char, MutableList<TemporaryTeleporterEntity>>.add(
     char: Char, entity: TemporaryTeleporterEntity
 ) {
-    if (this.containsKey(char)) {
-        this[char]!!.add(entity)
-    } else {
-        this[char] = mutableListOf(entity)
-    }
+    this[char]?.add(entity) ?: put(char, mutableListOf(entity))
 }
