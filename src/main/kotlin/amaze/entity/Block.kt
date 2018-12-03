@@ -8,13 +8,13 @@ import java.awt.image.BufferedImage
 import java.util.*
 
 class Block : Entity() {
-    private val image by lazy {
-        randomBlockImage()
-    }
+    private val image by lazy { randomBlockImage() }
 
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
-        graphics.drawImage(Assets.walkway, x, y, width, height, null)
-        graphics.drawImage(image, x, y, width, height, null)
+        with (graphics) {
+            drawImage(Assets.walkway, x, y, width, height, null)
+            drawImage(image, x, y, width, height, null)
+        }
     }
 
     override fun interact(llama: Llama) {
@@ -22,8 +22,7 @@ class Block : Entity() {
     }
 
     private fun randomBlockImage(): BufferedImage {
-        val random = Random().nextInt(3) + 1
-        return when(random) {
+        return when(Random().nextInt(3) + 1) {
             1 -> Assets.block1
             2 -> Assets.block2
             else -> Assets.block3

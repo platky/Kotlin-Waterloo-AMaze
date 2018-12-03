@@ -7,7 +7,6 @@ import java.awt.Rectangle
 import java.awt.TexturePaint
 
 object Walkway : Entity() {
-
     override fun draw(graphics: Graphics2D, x: Int, y: Int, width: Int, height: Int) {
         val paint = TexturePaint(Assets.walkway, Rectangle(x, y, width, height))
         with(graphics) {
@@ -17,6 +16,5 @@ object Walkway : Entity() {
     }
 
     override fun interact(llama: Llama) {
-
     }
 }
