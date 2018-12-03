@@ -76,7 +76,9 @@ class Maze(
 
             llama.startUserMove(controller.getNextMove(this))
             val nextPosition = llama.getNextPosition(llamaPosition)
-            getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
+            if (llamaPosition != nextPosition) {
+                getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
+            }
         }
     }
 
