@@ -7,7 +7,7 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.util.*
 
-class Block : Entity() {
+class Forest : Entity() {
     private val image by lazy { randomBlockImage() }
 
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {

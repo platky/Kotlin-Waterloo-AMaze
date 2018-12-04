@@ -10,6 +10,9 @@ fun main(args: Array<String>) {
     GameController(puzzles[6].toMaze(Puzzle7())).startGame()
 }
 
+/**
+ * Who put that alien tech in the Llama forest?
+ */
 class Puzzle7 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT

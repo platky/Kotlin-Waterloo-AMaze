@@ -7,16 +7,13 @@ import main.kotlin.amaze.core.GameController
 import main.kotlin.amaze.toMaze
 
 fun main(args: Array<String>) {
-    GameController(puzzles[4].toMaze(Puzzle5())).startGame()
+    GameController(puzzles[9].toMaze(Puzzle10())).startGame()
 }
 
 /**
- * Mazes are getting more complicated now
- *
- * Hints
- * You can always be greedy and stick to a side
+ * Good Luck!
  */
-class Puzzle5 : LlamaController {
+class Puzzle10 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT
     }

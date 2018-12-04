@@ -70,7 +70,7 @@ private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Pos
 }
 
 private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
-    BLOCK -> Block()
+    BLOCK -> Forest()
     START_BLOCK -> Walkway
     WALKWAY -> Walkway
     PIT -> Pit

@@ -10,6 +10,9 @@ fun main(args: Array<String>) {
     GameController(puzzles[8].toMaze(Puzzle9())).startGame()
 }
 
+/**
+ * Are you the same Llama after going through a teleporter?
+ */
 class Puzzle9 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT

@@ -7,6 +7,9 @@ fun main(args: Array<String>) {
     GameController(puzzles[0].toMaze(Puzzle1())).startGame()
 }
 
+/**
+ * You have access to the enum [LlamaAction]
+ */
 class Puzzle1 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT
