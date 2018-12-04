@@ -10,6 +10,11 @@ fun main(args: Array<String>) {
     GameController(puzzles[3].toMaze(Puzzle4())).startGame()
 }
 
+/**
+ * Going down every path is not wise, danger awaits!
+ *
+ * Feel free to store any state in this class
+ */
 class Puzzle4 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT

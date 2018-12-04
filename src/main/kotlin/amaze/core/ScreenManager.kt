@@ -58,7 +58,14 @@ class ScreenManager(
         return bufferStrategy
     }
 
-    fun getRefreshRate(): Int = device.displayMode.refreshRate
+    fun getRefreshRate(): Int {
+        val refreshRate = device.displayMode.refreshRate
+        //Mac's sometimes return 0
+        if (refreshRate < 30)
+            return 60
+
+        return refreshRate
+    }
 
     fun getWidth(): Int = window.width
 

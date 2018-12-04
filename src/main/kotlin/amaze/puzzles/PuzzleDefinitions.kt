@@ -71,10 +71,10 @@ val puzzles = listOf(
         XXXXXXXXXXXXXX
         XXXXXOOOOOOFXX
         XXOOOXXXXXXXXX
-        XXOXOOOOOOOXXX
+        XXOGOOOOOOOXXX
         XXODXPPXXXFOOX
         XXXXXOOOOOOXOX
-        XSSSOOOOOXXXOX
+        XSSSOOOOOXXXGX
         XXXXXXXXXXXXXX
     """.trimIndent(),
     """
@@ -88,6 +88,20 @@ val puzzles = listOf(
         XXOOOXXXXXXXXX
         XOOPOOOOXOOOXX
         XGPXHPXOOOXOSX
+        XXXXXXXXXXXXXX
+    """.trimIndent(),
+    """
+        XXXXXXXXXXXXXX
+        XSOOSOOOOSOOSX
+        XOOOOOSOOOOOOX
+        XSOXXXXXXXXOOX
+        XOOOOOOOOOOOOX
+        XOOOXXOOXXOOOX
+        XOOOXFOGPXOOSX
+        XSOOXDGPFXOOOX
+        XOOOXXXXXXXOOX
+        XOSOSOOOOSOSOX
+        XSOOOOSOOOOOSX
         XXXXXXXXXXXXXX
     """.trimIndent()
 )

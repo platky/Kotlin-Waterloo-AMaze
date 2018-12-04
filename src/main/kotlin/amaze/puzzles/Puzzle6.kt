@@ -10,6 +10,12 @@ fun main(args: Array<String>) {
     GameController(puzzles[5].toMaze(Puzzle6())).startGame()
 }
 
+/**
+ * Prepared to be AMazed!
+ *
+ * Hints
+ * Pits are really no different from forests
+ */
 class Puzzle6 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT

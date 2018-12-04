@@ -10,6 +10,15 @@ fun main(args: Array<String>) {
     GameController(puzzles[1].toMaze(Puzzle2())).startGame()
 }
 
+/**
+ * The llama has eyes! You can utilize [Maze.getEntityInFrontOfLlama]
+ *
+ * Kotlin makes it easy to check the instance of something
+ * https://kotlinlang.org/docs/reference/typecasts.html#is-and-is-operators
+ *
+ * In Kotlin if can be used as an expression like:
+ * val max = if (a > b) a else b
+ */
 class Puzzle2 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
         return LlamaAction.TURN_RIGHT

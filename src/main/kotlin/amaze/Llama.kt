@@ -91,9 +91,9 @@ class Llama {
             height: Int,
             movePercentageComplete: Double
     ) {
-        graphics.renderTransformed(width, height, movePercentageComplete) {
-            if (state == DISAPPEARED) return
+        if (state == DISAPPEARED) return
 
+        graphics.renderTransformed(width, height, movePercentageComplete) {
             val image = getLlamaImage(movePercentageComplete)
 
             val llamaHeight = if (state == FALLING) {
