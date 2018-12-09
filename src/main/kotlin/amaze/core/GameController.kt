@@ -1,6 +1,7 @@
 package main.kotlin.amaze.core
 
 import main.kotlin.amaze.Maze
+import main.kotlin.amaze.core.assets.Images
 
 class GameController(private val maze: Maze) {
     private val inputManager = InputManager(this)
@@ -16,11 +17,11 @@ class GameController(private val maze: Maze) {
     private var leftOverTime = 0L
 
     init {
-        Assets.loadImages(screenManager)
+        Images.loadImages(screenManager)
     }
 
-    fun update(timeDelta: Long) {
-        val fullTimeDelta = timeDelta + leftOverTime
+    fun update(timeDeltaNanos: Long) {
+        val fullTimeDelta = timeDeltaNanos + leftOverTime
         val timeDeltaMillis = fullTimeDelta / NANOS_PER_MILLI
         leftOverTime = fullTimeDelta - timeDeltaMillis * NANOS_PER_MILLI
 

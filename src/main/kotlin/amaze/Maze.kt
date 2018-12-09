@@ -1,6 +1,6 @@
 package main.kotlin.amaze
 
-import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.core.assets.Images
 import main.kotlin.amaze.entity.Entity
 import java.awt.Color
 import java.awt.Graphics2D
@@ -94,9 +94,9 @@ class Maze(
             drawLlama(cellWidth, cellHeight)
 
             if (llama.isDead()) {
-                drawInCenter(Assets.ouch, width, height, 0.75)
+                drawInCenter(Images.ouch, width, height, 0.75)
             } else if (llama.isVictorious()) {
-                drawInCenter(Assets.yippee, width, height, 0.75)
+                drawInCenter(Images.yippee, width, height, 0.75)
             }
         }
     }

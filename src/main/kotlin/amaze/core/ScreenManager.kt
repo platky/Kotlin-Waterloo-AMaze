@@ -21,8 +21,7 @@ class ScreenManager(
     private val bufferStrategy: BufferStrategy
 
     init {
-        require(aspectRatio > 0)
-        require(screenRatio > 0 && screenRatio <= 1.0)
+        require(aspectRatio > 0 && screenRatio > 0 && screenRatio <= 1.0)
 
         val screenWidth = device.displayMode.width
         val screenHeight = device.displayMode.height
@@ -61,10 +60,7 @@ class ScreenManager(
     fun getRefreshRate(): Int {
         val refreshRate = device.displayMode.refreshRate
         //Mac's sometimes return 0
-        if (refreshRate < 30)
-            return 60
-
-        return refreshRate
+        return if (refreshRate < 30) 60 else refreshRate
     }
 
     fun getWidth(): Int = window.width

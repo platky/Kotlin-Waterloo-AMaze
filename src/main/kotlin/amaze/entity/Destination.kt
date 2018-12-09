@@ -2,15 +2,14 @@ package main.kotlin.amaze.entity
 
 import main.kotlin.amaze.Llama
 import main.kotlin.amaze.LlamaState
-import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.core.assets.Images
+import main.kotlin.amaze.core.assets.draw
 import java.awt.Graphics2D
 
 object Destination : Entity() {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
-        with (graphics) {
-            drawImage(Assets.walkway, 0, 0, width, height, null)
-            drawImage(Assets.destination, 0, 0, width, height, null)
-        }
+        Images.walkway.draw(graphics, width, height)
+        Images.destination.draw(graphics, width, height)
     }
 
     override fun interact(llama: Llama) {
