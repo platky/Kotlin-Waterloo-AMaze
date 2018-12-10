@@ -7,7 +7,8 @@ class GameController(private val maze: Maze) {
     private val inputManager = InputManager(this)
     private val screenManager = ScreenManager(
             title = "Kotlin Waterloo Amaze",
-            aspectRatio = maze.numColumns.toDouble() / maze.numRows,
+            aspectWidth = maze.numColumns,
+            aspectHeight = maze.numRows,
             screenRatio = 0.75,
             keyListener = inputManager,
             windowListener = inputManager
@@ -18,6 +19,7 @@ class GameController(private val maze: Maze) {
 
     init {
         Images.loadImages(screenManager)
+        screenManager.setIcon(Images.destination)
     }
 
     fun update(timeDeltaNanos: Long) {

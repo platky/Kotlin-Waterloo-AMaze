@@ -1,10 +1,9 @@
 # Kotlin-Waterloo-AMaze
 Coding session for the [Kotlin Waterloo P2P Group].
 
-#### Guide the animated llama to the food and avoid dying:
 ![picture](/src/resources/images/Capture.PNG)
 
-#### Setup Instructions:
+### Setup Instructions:
 1. Ensure that you have the [Java 8 SDK] installed (the JRE is not enough)
 2. Install a recent version of [IntelliJ Idea] (the free community edition is fine).
     1. If you already have IntelliJ installed, ensure that you have Kotlin plugin 1.3 or newer
@@ -14,7 +13,7 @@ Coding session for the [Kotlin Waterloo P2P Group].
 7. Click **Finish** and build & run Puzzle1.kt (in package main.kotlin.amaze.puzzles) 
 8. Fix the **getNextMove()** method to make the llama go forward and move on to the next puzzle
 
-#### Design Choices:
+### Design Choices:
 * Primary goal was to simplify the setup process since we only have 10 minutes to get everyone running
     * Avoid any dependencies to eliminate the potential for setup issues
     * Avoid dependency on JUnit.  We removed unit tests but we strongly encourage unit tests for regular projects
