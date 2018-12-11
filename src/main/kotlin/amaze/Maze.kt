@@ -1,10 +1,12 @@
 package main.kotlin.amaze
 
-import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.core.assets.Images
 import main.kotlin.amaze.entity.Entity
+import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import kotlin.math.roundToInt
 
 private const val MILLIS_PER_MOVE = 1000L
 
@@ -83,8 +85,8 @@ class Maze(
     }
 
     fun draw(graphics: Graphics2D, width: Int, height: Int) {
-        val cellWidth = width / numColumns
-        val cellHeight = height / numRows
+        val cellWidth = Math.ceil(width.toDouble() / numColumns).toInt()
+        val cellHeight = Math.ceil(height.toDouble() / numRows).toInt()
 
         with (graphics) {
             color = Color.GRAY
@@ -94,9 +96,9 @@ class Maze(
             drawLlama(cellWidth, cellHeight)
 
             if (llama.isDead()) {
-                drawInCenter(Assets.ouch, width, height, 0.75)
+                drawInCenter(Images.ouch, width, height, 0.75)
             } else if (llama.isVictorious()) {
-                drawInCenter(Assets.yippee, width, height, 0.75)
+                drawInCenter(Images.yippee, width, height, 0.75)
             }
         }
     }

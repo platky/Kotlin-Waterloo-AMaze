@@ -1,7 +1,8 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaState.*
-import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.core.assets.Images
+import main.kotlin.amaze.core.assets.Sound
 import java.awt.AlphaComposite
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
@@ -73,7 +74,7 @@ class Llama {
     }
 
     fun transitionToState(state: LlamaState) {
-        if (state == CRASHING) Assets.playSound(Assets.DYING_SOUND)
+        if (state == CRASHING) Sound.DYING.play()
 
         this.state = state
     }
@@ -101,6 +102,7 @@ class Llama {
             } else {
                 height * SIZE_COEFFICIENT
             }
+
             val llamaWidth = (llamaHeight / image.height) * image.width
             drawImage(
                     image,
@@ -120,7 +122,7 @@ class Llama {
             width: Int,
             height: Int,
             movePercentageComplete: Double,
-            render: Graphics2D.() -> Unit
+            crossinline render: Graphics2D.() -> Unit
     ) {
         val ratio = computeMovementRatio(movePercentageComplete)
         val deltaX = orientation.xDirection * width * ratio
@@ -129,7 +131,6 @@ class Llama {
 
         val rotation = orientation.radians + state.rotation * movePercentageComplete
         rotate(rotation, width / 2.0, height / 2.0)
-
         setTransparency(movePercentageComplete)
 
         render()
@@ -168,9 +169,9 @@ class Llama {
 
     private fun getLlamaImage(movePercentageComplete: Double): BufferedImage {
         return when {
-            state == SLAUGHTERED -> Assets.llamaDead
-            state == CRASHING && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> Assets.llamaDead
-            else -> Assets.llama
+            state == SLAUGHTERED -> Images.llamaDead
+            state == CRASHING && movePercentageComplete > DEAD_MOVEMENT_CUTOFF -> Images.llamaDead
+            else -> Images.llama
         }
     }
 }

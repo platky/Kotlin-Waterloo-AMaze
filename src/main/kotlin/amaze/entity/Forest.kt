@@ -2,30 +2,27 @@ package main.kotlin.amaze.entity
 
 import main.kotlin.amaze.Llama
 import main.kotlin.amaze.LlamaState
-import main.kotlin.amaze.core.Assets
+import main.kotlin.amaze.core.assets.Images
+import main.kotlin.amaze.core.assets.draw
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import java.util.*
 
 class Forest : Entity() {
-    private val image by lazy { randomBlockImage() }
+    private val forestImage by lazy { randomBlockImage() }
 
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
-        with (graphics) {
-            drawImage(Assets.walkway, 0, 0, width, height, null)
-            drawImage(image, 0, 0, width, height, null)
-        }
+        Images.walkway.draw(graphics, width, height)
+        forestImage.draw(graphics, width, height)
     }
 
     override fun interact(llama: Llama) {
         llama.transitionToState(LlamaState.CRASHING)
     }
 
-    private fun randomBlockImage(): BufferedImage {
-        return when(Random().nextInt(3) + 1) {
-            1 -> Assets.block1
-            2 -> Assets.block2
-            else -> Assets.block3
-        }
+    private fun randomBlockImage(): BufferedImage = when (Random().nextInt(3)) {
+        0 -> Images.forrest1
+        1 -> Images.forrest2
+        else -> Images.forrest3
     }
 }

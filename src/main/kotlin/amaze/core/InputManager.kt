@@ -12,9 +12,7 @@ class InputManager(private val gameController: GameController) : WindowAdapter()
     }
 
     override fun keyPressed(e: KeyEvent) {
-        when (e.keyCode) {
-            KeyEvent.VK_ESCAPE -> gameController.exitGame()
-        }
+        if (e.keyCode == KeyEvent.VK_ESCAPE) gameController.exitGame()
     }
 
     override fun keyReleased(e: KeyEvent) {

@@ -10,8 +10,6 @@ class GameTimer(refreshRate: Int, private val controller: GameController): Runna
     @Volatile
     private var isRunning = true
 
-    private var overSleep = 0L
-
     fun stop() {
         isRunning = false
     }

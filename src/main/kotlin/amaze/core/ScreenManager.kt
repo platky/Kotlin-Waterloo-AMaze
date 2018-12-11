@@ -10,7 +10,8 @@ import javax.swing.JFrame
 
 class ScreenManager(
         title: String,
-        aspectRatio: Double, // aspectRatio = width / height
+        aspectWidth: Int,
+        aspectHeight: Int,
         screenRatio: Double, // percentage of the width or height to use (based on aspect ratio)
         keyListener: KeyListener,
         windowListener: WindowListener
@@ -21,21 +22,21 @@ class ScreenManager(
     private val bufferStrategy: BufferStrategy
 
     init {
-        require(aspectRatio > 0)
+        require(aspectWidth > 0 && aspectHeight > 0)
         require(screenRatio > 0 && screenRatio <= 1.0)
 
         val screenWidth = device.displayMode.width
         val screenHeight = device.displayMode.height
 
-        val windowWidth: Double
-        val windowHeight: Double
-        if (aspectRatio > screenWidth.toDouble() / screenHeight) {
-            windowWidth = screenWidth * screenRatio
-            windowHeight = windowWidth / aspectRatio
+        val aspectRatio = aspectWidth.toDouble() / aspectHeight
+
+        val squareLength = if (aspectRatio > screenWidth.toDouble() / screenHeight) {
+            (screenWidth * screenRatio / aspectWidth).toInt()
         } else {
-            windowHeight = screenHeight * screenRatio
-            windowWidth = windowHeight * aspectRatio
+            (screenHeight * screenRatio / aspectHeight).toInt()
         }
+
+        val windowDimensions = Dimension(squareLength * aspectWidth, squareLength * aspectHeight)
 
         with(window) {
             addKeyListener(keyListener)
@@ -45,12 +46,16 @@ class ScreenManager(
             window.title = title
             isUndecorated = false
             isVisible = true
-            contentPane.preferredSize = Dimension(windowWidth.toInt(), windowHeight.toInt())
+            contentPane.preferredSize = windowDimensions
             pack()
             isResizable = false
             setLocationRelativeTo(null)
         }
         bufferStrategy = window.setupDoubleBuffering()
+    }
+
+    fun setIcon(icon: BufferedImage) {
+        window.iconImage = icon
     }
 
     private fun JFrame.setupDoubleBuffering(): BufferStrategy {
@@ -61,10 +66,7 @@ class ScreenManager(
     fun getRefreshRate(): Int {
         val refreshRate = device.displayMode.refreshRate
         //Mac's sometimes return 0
-        if (refreshRate < 30)
-            return 60
-
-        return refreshRate
+        return if (refreshRate < 30) 60 else refreshRate
     }
 
     fun getWidth(): Int = window.width

@@ -1,12 +1,14 @@
 package main.kotlin.amaze.core
 
 import main.kotlin.amaze.Maze
+import main.kotlin.amaze.core.assets.Images
 
 class GameController(private val maze: Maze) {
     private val inputManager = InputManager(this)
     private val screenManager = ScreenManager(
             title = "Kotlin Waterloo Amaze",
-            aspectRatio = maze.numColumns.toDouble() / maze.numRows,
+            aspectWidth = maze.numColumns,
+            aspectHeight = maze.numRows,
             screenRatio = 0.75,
             keyListener = inputManager,
             windowListener = inputManager
@@ -16,11 +18,12 @@ class GameController(private val maze: Maze) {
     private var leftOverTime = 0L
 
     init {
-        Assets.loadImages(screenManager)
+        Images.loadImages(screenManager)
+        screenManager.setIcon(Images.destination)
     }
 
-    fun update(timeDelta: Long) {
-        val fullTimeDelta = timeDelta + leftOverTime
+    fun update(timeDeltaNanos: Long) {
+        val fullTimeDelta = timeDeltaNanos + leftOverTime
         val timeDeltaMillis = fullTimeDelta / NANOS_PER_MILLI
         leftOverTime = fullTimeDelta - timeDeltaMillis * NANOS_PER_MILLI
 
