@@ -8,7 +8,9 @@ fun main(args: Array<String>) {
 }
 
 /**
- * You have access to the enum [LlamaAction]
+ * The llama is experiencing rightward drunkenness!
+ *
+ * Fix the [getNextMove] method to make the llama move forward.
  */
 class Puzzle1 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {

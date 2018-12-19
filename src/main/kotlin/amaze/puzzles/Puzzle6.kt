@@ -13,11 +13,11 @@ fun main(args: Array<String>) {
 /**
  * Prepared to be AMazed!
  *
- * Hints
- * Pits are really no different from forests
+ * Hint:
+ * Pits are really no different from forests.
  */
 class Puzzle6 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

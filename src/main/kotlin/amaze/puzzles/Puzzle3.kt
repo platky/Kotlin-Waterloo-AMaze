@@ -4,6 +4,8 @@ import main.kotlin.amaze.LlamaAction
 import main.kotlin.amaze.LlamaController
 import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.GameController
+import main.kotlin.amaze.entity.Forest
+import main.kotlin.amaze.entity.Walkway
 import main.kotlin.amaze.toMaze
 
 fun main(args: Array<String>) {
@@ -16,12 +18,12 @@ fun main(args: Array<String>) {
  * The when expression is very useful
  * https://kotlinlang.org/docs/reference/control-flow.html#when-expression
  *
- * Hints
- * There is a specific condition when you should always turn left
- * There is a specific condition when you should always turn right
+ * Hints:
+ * There is a specific condition when you should always turn left.
+ * There is a specific condition when you should always turn right.
  */
 class Puzzle3 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

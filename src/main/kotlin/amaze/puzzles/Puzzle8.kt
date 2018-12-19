@@ -13,11 +13,11 @@ fun main(args: Array<String>) {
 /**
  * Don't get stuck in a loop!
  *
- * Hints
- * Don't focus on an optimal solution immediately
+ * Hint:
+ * Don't focus on an optimal solution immediately.
  */
 class Puzzle8 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

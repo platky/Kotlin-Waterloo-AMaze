@@ -15,6 +15,6 @@ fun main(args: Array<String>) {
  */
 class Puzzle9 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

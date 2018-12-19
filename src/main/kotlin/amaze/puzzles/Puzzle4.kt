@@ -13,10 +13,11 @@ fun main(args: Array<String>) {
 /**
  * Going down every path is not wise, danger awaits!
  *
- * Feel free to store any state in this class
+ * Hint:
+ * You'll want to store some state in this class.
  */
 class Puzzle4 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

@@ -25,18 +25,7 @@ class ScreenManager(
         require(aspectWidth > 0 && aspectHeight > 0)
         require(screenRatio > 0 && screenRatio <= 1.0)
 
-        val screenWidth = device.displayMode.width
-        val screenHeight = device.displayMode.height
-
-        val aspectRatio = aspectWidth.toDouble() / aspectHeight
-
-        val squareLength = if (aspectRatio > screenWidth.toDouble() / screenHeight) {
-            (screenWidth * screenRatio / aspectWidth).toInt()
-        } else {
-            (screenHeight * screenRatio / aspectHeight).toInt()
-        }
-
-        val windowDimensions = Dimension(squareLength * aspectWidth, squareLength * aspectHeight)
+        val windowDimensions = ComputeWindowDimensions(aspectWidth, aspectHeight, screenRatio)
 
         with(window) {
             addKeyListener(keyListener)
@@ -52,6 +41,25 @@ class ScreenManager(
             setLocationRelativeTo(null)
         }
         bufferStrategy = window.setupDoubleBuffering()
+    }
+
+    private fun ComputeWindowDimensions(
+        aspectWidth: Int,
+        aspectHeight: Int,
+        screenRatio: Double
+    ): Dimension {
+        val screenWidth = device.displayMode.width
+        val screenHeight = device.displayMode.height
+
+        val aspectRatio = aspectWidth.toDouble() / aspectHeight
+
+        val squareLength = if (aspectRatio > screenWidth.toDouble() / screenHeight) {
+            (screenWidth * screenRatio / aspectWidth).toInt()
+        } else {
+            (screenHeight * screenRatio / aspectHeight).toInt()
+        }
+
+        return Dimension(squareLength * aspectWidth, squareLength * aspectHeight)
     }
 
     fun setIcon(icon: BufferedImage) {
