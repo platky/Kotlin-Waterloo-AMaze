@@ -1,12 +1,11 @@
 package main.kotlin.amaze
 
+import main.kotlin.amaze.LlamaOrientation.*
 import main.kotlin.amaze.core.assets.Images
 import main.kotlin.amaze.entity.Entity
-import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
-import kotlin.math.roundToInt
 
 private const val MILLIS_PER_MOVE = 1000L
 
@@ -31,39 +30,32 @@ class Maze(
 
     fun getEntityAt(column: Int, row: Int): Entity = entityGrid[row][column]
 
-    fun getEntityInFrontOfLlama(): Entity {
-        return when(llama.orientation) {
-            LlamaOrientation.NORTH -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
-            LlamaOrientation.EAST -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
-            LlamaOrientation.SOUTH -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
-            LlamaOrientation.WEST -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
-        }
-    }
+    fun getEntityInFrontOfLlama(): Entity = getEntityInDirectionFromLama(NORTH)
 
-    fun getEntityBehindLlama(): Entity {
-        return when(llama.orientation) {
-            LlamaOrientation.NORTH -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
-            LlamaOrientation.EAST -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
-            LlamaOrientation.SOUTH -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
-            LlamaOrientation.WEST -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
-        }
-    }
+    fun getEntityBehindLlama(): Entity = getEntityInDirectionFromLama(SOUTH)
 
-    fun getEntityOnLeftSideOfLlama(): Entity {
-        return when(llama.orientation) {
-            LlamaOrientation.NORTH -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
-            LlamaOrientation.EAST -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
-            LlamaOrientation.SOUTH -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
-            LlamaOrientation.WEST -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
-        }
-    }
+    fun getEntityOnLeftSideOfLlama(): Entity = getEntityInDirectionFromLama(WEST)
 
-    fun getEntityOnRightSideOfLlama(): Entity {
-        return when(llama.orientation) {
-            LlamaOrientation.NORTH -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
-            LlamaOrientation.EAST -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
-            LlamaOrientation.SOUTH -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
-            LlamaOrientation.WEST -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+    fun getEntityOnRightSideOfLlama(): Entity = getEntityInDirectionFromLama(EAST)
+
+    /**
+     * Gets the entity in the relative [direction] orienting as if the llama is facing [NORTH].
+     */
+    private fun getEntityInDirectionFromLama(
+        direction: LlamaOrientation
+    ): Entity {
+        val effectiveDirection = when (llama.orientation) {
+            NORTH -> direction
+            WEST -> direction.turnLeft()
+            EAST -> direction.turnRight()
+            SOUTH -> direction.turnLeft().turnLeft()
+        }
+
+        return when (effectiveDirection) {
+            NORTH -> getEntityAt(llamaPosition.column, llamaPosition.row - 1)
+            WEST -> getEntityAt(llamaPosition.column - 1, llamaPosition.row)
+            EAST -> getEntityAt(llamaPosition.column + 1, llamaPosition.row)
+            SOUTH -> getEntityAt(llamaPosition.column, llamaPosition.row + 1)
         }
     }
 

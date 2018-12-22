@@ -13,11 +13,11 @@ fun main(args: Array<String>) {
 /**
  * Mazes are getting more complicated now
  *
- * Hints
- * You can always be greedy and stick to a side
+ * Hint:
+ * You can be lazy and stick to a side.
  */
 class Puzzle5 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

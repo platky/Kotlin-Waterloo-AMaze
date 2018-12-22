@@ -4,6 +4,7 @@ import main.kotlin.amaze.LlamaAction
 import main.kotlin.amaze.LlamaController
 import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.GameController
+import main.kotlin.amaze.entity.Forest
 import main.kotlin.amaze.toMaze
 
 fun main(args: Array<String>) {
@@ -11,16 +12,16 @@ fun main(args: Array<String>) {
 }
 
 /**
- * The llama has eyes! You can utilize [Maze.getEntityInFrontOfLlama]
+ * The llama has eyes!  Use [Maze.getEntityInFrontOfLlama] and turn if it's a forest.
  *
  * Kotlin makes it easy to check the instance of something
  * https://kotlinlang.org/docs/reference/typecasts.html#is-and-is-operators
  *
- * In Kotlin if can be used as an expression like:
- * val max = if (a > b) a else b
+ * In Kotlin "if" can be used as an expression like:
+ * return if (a > b) a else b // return max value
  */
 class Puzzle2 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }

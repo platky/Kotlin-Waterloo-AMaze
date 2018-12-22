@@ -2,7 +2,6 @@ package main.kotlin.amaze
 
 import main.kotlin.amaze.entity.*
 import java.awt.Graphics2D
-import java.util.*
 
 private const val START_BLOCK = 'S'
 private const val WALKWAY = 'O'
@@ -16,10 +15,8 @@ private const val TELEPORTER_3 = 'H'
 private const val TELEPORTER_4 = 'I'
 private const val TELEPORTER_5 = 'J'
 
-private val random = Random()
-
 fun String.toMaze(controller: LlamaController): Maze {
-    val rows = split("\n")
+    val rows = lines()
     val height = rows.size
     require(height >= 5) { "Maze must be at least 5 spaces tall" }
 
@@ -39,7 +36,7 @@ fun String.toMaze(controller: LlamaController): Maze {
             }
             val entity = char.toEntity(row, column)
             if (entity is TemporaryTeleporterEntity) {
-                teleporters.add(rows[row][column], entity)
+                teleporters.addToList(rows[row][column], entity)
             }
 
             entity
@@ -60,13 +57,8 @@ fun String.toMaze(controller: LlamaController): Maze {
         }
     }
 
-    val startingPosition = chooseRandomStartingPosition(possibleStartingPositions)
-    // We can remove the non-null assertion (!!) when we upgrade to Kotlin 1.3 due to contracts
+    val startingPosition = possibleStartingPositions.random()
     return Maze(entityGrid, controller, destinationPosition!!, startingPosition)
-}
-
-private fun chooseRandomStartingPosition(possiblePositions: List<Position>): Position {
-    return possiblePositions[random.nextInt(possiblePositions.size)]
 }
 
 private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
@@ -78,10 +70,8 @@ private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 -> {
         TemporaryTeleporterEntity(Position(column, row))
     }
-    else -> throw InvalidMazeCharacterException("$this is not a valid representation of an entity")
+    else -> error("$this is not a valid representation of an entity")
 }
-
-class InvalidMazeCharacterException(message: String) : UnsupportedOperationException(message)
 
 private class TemporaryTeleporterEntity(val position: Position) : Entity() {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {}
@@ -89,8 +79,6 @@ private class TemporaryTeleporterEntity(val position: Position) : Entity() {
     override fun interact(llama: Llama) {}
 }
 
-private fun MutableMap<Char, MutableList<TemporaryTeleporterEntity>>.add(
-    char: Char, entity: TemporaryTeleporterEntity
-) {
-    this[char]?.add(entity) ?: put(char, mutableListOf(entity))
+private fun <K : Any, V : Any> MutableMap<K, MutableList<V>>.addToList(key: K, value: V) {
+    this[key]?.add(value) ?: put(key, mutableListOf(value))
 }

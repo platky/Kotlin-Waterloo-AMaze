@@ -11,10 +11,10 @@ fun main(args: Array<String>) {
 }
 
 /**
- * Good Luck!
+ * Achieve enlightenment by being one with the llama.  Good Luck!
  */
 class Puzzle10 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.TURN_RIGHT
+        return LlamaAction.MOVE_FORWARD
     }
 }
