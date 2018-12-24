@@ -6,21 +6,24 @@ import main.kotlin.amaze.entity.Entity
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import kotlin.math.min
 
-private const val MILLIS_PER_MOVE = 1000L
+private const val MILLIS_PER_MOVE = 1_000L
 
 class Maze(
-        private val entityGrid: Array<Array<Entity>>,
-        private val controller: LlamaController,
-        /** The destination where you're trying to get to */
-        val destinationPosition: Position,
-        startingPosition: Position
+    private val entityGrid: Array<Array<Entity>>,
+    private val controller: LlamaController,
+    val destinationPosition: Position, // The destination where the llama is trying to get to
+    startingPosition: Position
 ) {
     /** The current llama position */
     var llamaPosition: Position = startingPosition
         private set
 
+    /** The amount of milliseconds that elapsed since the game started. */
     private var gameTime = 0L
+
+    /** The timestamp (in milliseconds) of the last move. */
     private var lastMoveTime = -MILLIS_PER_MOVE
 
     val numColumns = entityGrid[0].size
@@ -28,14 +31,29 @@ class Maze(
 
     private val llama = Llama()
 
+    /**
+     * @return The entity at the specified grid position.
+     */
     fun getEntityAt(column: Int, row: Int): Entity = entityGrid[row][column]
 
+    /**
+     * @return The entity that's in front of the llama (based on the llama's orientation).
+     */
     fun getEntityInFrontOfLlama(): Entity = getEntityInDirectionFromLama(NORTH)
 
+    /**
+     * @return The entity behind the llama (based on the llama's orientation).
+     */
     fun getEntityBehindLlama(): Entity = getEntityInDirectionFromLama(SOUTH)
 
+    /**
+     * @return The entity on the left side of the llama (based on the llama's orientation).
+     */
     fun getEntityOnLeftSideOfLlama(): Entity = getEntityInDirectionFromLama(WEST)
 
+    /**
+     * @return The entity on the right side of the llama (based on the llama's orientation).
+     */
     fun getEntityOnRightSideOfLlama(): Entity = getEntityInDirectionFromLama(EAST)
 
     /**
@@ -59,20 +77,21 @@ class Maze(
         }
     }
 
+    /**
+     * Updates the maze given the [elapsedTimeMillis] since the last update.
+     */
     fun update(elapsedTimeMillis: Long) {
         gameTime += elapsedTimeMillis
+        if (gameTime - lastMoveTime < MILLIS_PER_MOVE) return
 
-        if (gameTime - lastMoveTime >= MILLIS_PER_MOVE) {
-            lastMoveTime += MILLIS_PER_MOVE
+        lastMoveTime += MILLIS_PER_MOVE
+        llamaPosition = llama.finishMove(llamaPosition)
+        if (!llama.state.isReadyForAnotherUserMove()) return
 
-            llamaPosition = llama.finishMove(llamaPosition)
-            if (!llama.isReadyForAnotherUserMove()) return
-
-            llama.startUserMove(controller.getNextMove(this))
-            val nextPosition = llama.getNextPosition(llamaPosition)
-            if (llamaPosition != nextPosition) {
-                getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
-            }
+        llama.startUserMove(controller.getNextMove(this))
+        val nextPosition = llama.getNextPosition(llamaPosition)
+        if (llamaPosition != nextPosition) {
+            getEntityAt(nextPosition.column, nextPosition.row).interact(llama)
         }
     }
 
@@ -80,17 +99,16 @@ class Maze(
         val cellWidth = Math.ceil(width.toDouble() / numColumns).toInt()
         val cellHeight = Math.ceil(height.toDouble() / numRows).toInt()
 
-        with (graphics) {
+        with(graphics) {
             color = Color.GRAY
             fillRect(0, 0, width, height)
 
             drawEntities(cellWidth, cellHeight)
             drawLlama(cellWidth, cellHeight)
 
-            if (llama.isDead()) {
-                drawInCenter(Images.ouch, width, height, 0.75)
-            } else if (llama.isVictorious()) {
-                drawInCenter(Images.yippee, width, height, 0.75)
+            when {
+                llama.state.isDead() -> drawInCenter(Images.ouch, width, height, 0.75)
+                llama.state.isVictorious() -> drawInCenter(Images.yippee, width, height, 0.75)
             }
         }
     }
@@ -110,11 +128,7 @@ class Maze(
 
     private fun Graphics2D.drawLlama(cellWidth: Int, cellHeight: Int) {
         val currentMoveTime = gameTime - lastMoveTime
-        val movePercentageComplete = if (currentMoveTime >= MILLIS_PER_MOVE) {
-            1.0
-        } else {
-            currentMoveTime.toDouble() / MILLIS_PER_MOVE
-        }
+        val movePercentageComplete = min(currentMoveTime.toDouble() / MILLIS_PER_MOVE, 1.0)
 
         val horizontalTranslation = llamaPosition.column * cellWidth
         val verticalTranslation = llamaPosition.row * cellHeight
@@ -124,21 +138,24 @@ class Maze(
         translate(-horizontalTranslation, -verticalTranslation)
     }
 
+    /**
+     * Draws an image in the center of the screen using the [sizeRatio] percentage of the screen.
+     */
     private fun Graphics2D.drawInCenter(
-            image: BufferedImage,
-            screenWidth: Int,
-            screenHeight: Int,
-            sizeRatio: Double
+        image: BufferedImage,
+        screenWidth: Int,
+        screenHeight: Int,
+        sizeRatio: Double
     ) {
         val imageWidth = screenWidth * sizeRatio
         val imageHeight = image.height * imageWidth / image.width
 
         drawImage(
-                image,
-                ((screenWidth - imageWidth) / 2).toInt(),
-                ((screenHeight - imageHeight) / 2).toInt(),
-                imageWidth.toInt(), imageHeight.toInt(),
-                null
+            image,
+            ((screenWidth - imageWidth) / 2).toInt(),
+            ((screenHeight - imageHeight) / 2).toInt(),
+            imageWidth.toInt(), imageHeight.toInt(),
+            null
         )
     }
 }

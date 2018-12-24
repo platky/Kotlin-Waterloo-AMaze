@@ -6,6 +6,9 @@ import main.kotlin.amaze.core.assets.Images
 import main.kotlin.amaze.core.assets.draw
 import java.awt.Graphics2D
 
+/**
+ * The llama can fall in a [Pit].
+ */
 object Pit : Entity() {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         Images.walkway.draw(graphics, width, height)
