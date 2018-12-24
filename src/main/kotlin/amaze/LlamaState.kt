@@ -19,6 +19,7 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
     DISAPPEARED,
     TO_VICTORY_AND_BEYOND(MOVEMENT_SPEED),
     VICTORIOUS,
+    WON,
     MOVING_ONTO_TELEPORTER(MOVEMENT_SPEED),
     FADING_OUT,
     FADING_IN;
@@ -27,16 +28,22 @@ enum class LlamaState(val rotation: Double, val speed: Double) {
 
     constructor(speed: Double) : this(0.0, speed)
 
-    fun getNextState(): LlamaState = when (this) {
-        ENTERING_PIT -> FALLING
-        FALLING -> DISAPPEARED
-        CRASHING -> SLAUGHTERED
-        MOVING_ONTO_TELEPORTER -> FADING_OUT
-        FADING_OUT -> FADING_IN
-        FADING_IN -> WAITING
-        TO_VICTORY_AND_BEYOND -> VICTORIOUS
-        else -> this
-    }.also { playTransitionSound() }
+    fun getNextState(): LlamaState {
+        val nextState = when (this) {
+            ENTERING_PIT -> FALLING
+            FALLING -> DISAPPEARED
+            CRASHING -> SLAUGHTERED
+            MOVING_ONTO_TELEPORTER -> FADING_OUT
+            FADING_OUT -> FADING_IN
+            FADING_IN -> WAITING
+            TO_VICTORY_AND_BEYOND -> VICTORIOUS
+            else -> this
+        }
+        if (this != nextState) {
+            nextState.playTransitionSound()
+        }
+        return nextState
+    }
 
     fun playTransitionSound() {
         when (this) {
