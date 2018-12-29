@@ -1,12 +1,9 @@
 package main.kotlin.amaze.core
 
-import java.awt.event.*
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 
-class InputManager(private val gameController: GameController) : WindowAdapter(), KeyListener {
-    override fun windowClosing(e: WindowEvent?) {
-        gameController.exitGame()
-    }
-
+class InputManager(private val gameController: GameController) : KeyListener {
     override fun keyTyped(e: KeyEvent) {
         e.consume()
     }

@@ -12,6 +12,9 @@ private val FORREST_IMAGES = listOf(
     lazy { Images.forrest3 }
 )
 
+/**
+ * The llama is afraid to walk through a [Forest] in fear of being hunted and slaughtered.
+ */
 class Forest : Entity() {
     private val forestImage by FORREST_IMAGES.random()
 
