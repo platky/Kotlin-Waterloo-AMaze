@@ -3,17 +3,22 @@ package main.kotlin.amaze.core
 import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.assets.Images
 
+/**
+ * The [GameController] connects everything together.  It configures the input management, sets up the screen,
+ * establishes the game timer for animation, and notifies the maze when to update and render.
+ */
 class GameController(private val maze: Maze) {
     private val inputManager = InputManager(this)
     private val screenManager = ScreenManager(
-            title = "Kotlin Waterloo Amaze",
-            aspectWidth = maze.numColumns,
-            aspectHeight = maze.numRows,
-            screenRatio = 0.75,
-            keyListener = inputManager,
-            windowListener = inputManager
+        title = "Kotlin Waterloo Amaze",
+        aspectWidth = maze.numColumns,
+        aspectHeight = maze.numRows,
+        screenRatio = 0.75,
+        keyListener = inputManager
     )
+
     private val timer = GameTimer(screenManager.getRefreshRate(), this)
+
     /** Keep track of sub-millisecond left-overs to reduce stutter */
     private var leftOverTime = 0L
 
@@ -22,7 +27,7 @@ class GameController(private val maze: Maze) {
         screenManager.setIcon(Images.destination)
     }
 
-    fun update(timeDeltaNanos: Long) {
+    fun updateGame(timeDeltaNanos: Long) {
         val fullTimeDelta = timeDeltaNanos + leftOverTime
         val timeDeltaMillis = fullTimeDelta / NANOS_PER_MILLI
         leftOverTime = fullTimeDelta - timeDeltaMillis * NANOS_PER_MILLI
@@ -31,9 +36,9 @@ class GameController(private val maze: Maze) {
     }
 
     fun render() {
-        val graphics = screenManager.initializeFrame()
-        maze.draw(graphics, screenManager.getWidth(), screenManager.getHeight())
-        screenManager.finalizeFrame()
+        screenManager.renderNewFrame { graphics ->
+            maze.draw(graphics, screenManager.getWidth(), screenManager.getHeight())
+        }
     }
 
     fun startGame() {
@@ -42,9 +47,6 @@ class GameController(private val maze: Maze) {
 
     fun exitGame() {
         timer.stop()
-    }
-
-    fun cleanupAndShutDown() {
         System.exit(0)
     }
 }

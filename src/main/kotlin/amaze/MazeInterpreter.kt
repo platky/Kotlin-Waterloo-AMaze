@@ -15,6 +15,9 @@ private const val TELEPORTER_3 = 'H'
 private const val TELEPORTER_4 = 'I'
 private const val TELEPORTER_5 = 'J'
 
+/**
+ * Interprets and constructs a [Maze] from [this] string representation.
+ */
 fun String.toMaze(controller: LlamaController): Maze {
     val rows = lines()
     val height = rows.size
@@ -61,6 +64,9 @@ fun String.toMaze(controller: LlamaController): Maze {
     return Maze(entityGrid, controller, destinationPosition!!, startingPosition)
 }
 
+/**
+ * Interprets and constructs an [Entity] from [this] character.
+ */
 private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     BLOCK -> Forest()
     START_BLOCK -> Walkway

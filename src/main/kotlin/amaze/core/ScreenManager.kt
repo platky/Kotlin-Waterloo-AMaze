@@ -1,20 +1,21 @@
 package main.kotlin.amaze.core
 
-import java.awt.*
+import java.awt.Dimension
+import java.awt.Graphics2D
+import java.awt.GraphicsEnvironment
+import java.awt.Toolkit
 import java.awt.event.KeyListener
-import java.awt.event.WindowListener
 import java.awt.image.BufferStrategy
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.JFrame
 
 class ScreenManager(
-        title: String,
-        aspectWidth: Int,
-        aspectHeight: Int,
-        screenRatio: Double, // percentage of the width or height to use (based on aspect ratio)
-        keyListener: KeyListener,
-        windowListener: WindowListener
+    title: String,
+    aspectWidth: Int,
+    aspectHeight: Int,
+    screenRatio: Double, // percentage of the width or height to use (based on aspect ratio)
+    keyListener: KeyListener
 ) {
     private val device = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice
     private val window = JFrame()
@@ -25,25 +26,23 @@ class ScreenManager(
         require(aspectWidth > 0 && aspectHeight > 0)
         require(screenRatio > 0 && screenRatio <= 1.0)
 
-        val windowDimensions = ComputeWindowDimensions(aspectWidth, aspectHeight, screenRatio)
+        val windowDimensions = computeWindowDimensions(aspectWidth, aspectHeight, screenRatio)
 
         with(window) {
-            addKeyListener(keyListener)
-            addWindowListener(windowListener)
-            focusTraversalKeysEnabled = false //allow custom actions for tab key etc.
-            ignoreRepaint = true
             window.title = title
-            isUndecorated = false
-            isVisible = true
+            addKeyListener(keyListener)
+            defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+            ignoreRepaint = true
             contentPane.preferredSize = windowDimensions
-            pack()
             isResizable = false
+            pack()
             setLocationRelativeTo(null)
+            isVisible = true
         }
         bufferStrategy = window.setupDoubleBuffering()
     }
 
-    private fun ComputeWindowDimensions(
+    private fun computeWindowDimensions(
         aspectWidth: Int,
         aspectHeight: Int,
         screenRatio: Double
@@ -73,20 +72,30 @@ class ScreenManager(
 
     fun getRefreshRate(): Int {
         val refreshRate = device.displayMode.refreshRate
-        //Mac's sometimes return 0
-        return if (refreshRate < 30) 60 else refreshRate
+
+        return if (refreshRate < 30) 60 else refreshRate //Macs sometimes return 0
     }
 
     fun getWidth(): Int = window.width
 
     fun getHeight(): Int = window.contentPane.height
 
-    private fun getTitleBarHeight(): Int=  window.insets.top
+    private fun getTitleBarHeight(): Int = window.insets.top
+
+    inline fun renderNewFrame(render: (Graphics2D) -> Unit) {
+        val graphics = initializeFrame()
+        try {
+            render(graphics)
+        } finally {
+            finalizeFrame()
+        }
+    }
 
     /**
-     * Called at the beginning of each frame before you can start drawing on screen.
+     * For internal use only.  Call [renderNewFrame] instead.
      */
-    fun initializeFrame(): Graphics2D {
+    @PublishedApi
+    internal fun initializeFrame(): Graphics2D {
         val graphics2D = bufferStrategy.drawGraphics as Graphics2D
         graphics2D.translate(0, getTitleBarHeight())
 
@@ -95,9 +104,10 @@ class ScreenManager(
     }
 
     /**
-     * Called at the end of each frame to update the screen.
+     * For internal use only.  Call [renderNewFrame] instead.
      */
-    fun finalizeFrame() {
+    @PublishedApi
+    internal fun finalizeFrame() {
         graphics?.dispose()
         graphics = null
         if (!bufferStrategy.contentsLost()) bufferStrategy.show()
@@ -110,10 +120,13 @@ class ScreenManager(
         return createCompatibleImage(tempImage).also { tempImage.flush() }
     }
 
+    /**
+     * Creates an image which is compatible with the graphics device from improved performance.
+     */
     private fun createCompatibleImage(image: BufferedImage): BufferedImage {
         val transparency = image.colorModel.transparency
-        val result = device.defaultConfiguration.
-                createCompatibleImage(image.width, image.height, transparency)
+        val result = device.defaultConfiguration
+            .createCompatibleImage(image.width, image.height, transparency)
 
         with(result.createGraphics()) {
             drawImage(image, 0, 0, null)
