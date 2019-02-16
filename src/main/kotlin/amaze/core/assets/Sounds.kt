@@ -1,5 +1,6 @@
 package main.kotlin.amaze.core.assets
 
+import main.kotlin.amaze.core.assets.Sound.*
 import javax.sound.sampled.AudioSystem
 
 private const val SOUND_PATH = "/resources/sound"
@@ -29,12 +30,7 @@ enum class Sound(name: String) {
 }
 
 object Sounds {
-    private val victorySounds = arrayOf(
-        Sound.VICTORY_1,
-        Sound.VICTORY_2,
-        Sound.VICTORY_3,
-        Sound.VICTORY_4
-    )
+    private val victorySounds = arrayOf(VICTORY_1, VICTORY_2, VICTORY_3, VICTORY_4)
 
     fun playVictoriousSound() {
         victorySounds.random().play()

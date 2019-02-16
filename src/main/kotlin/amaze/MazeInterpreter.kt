@@ -79,7 +79,7 @@ private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     else -> error("$this is not a valid representation of an entity")
 }
 
-private class TemporaryTeleporterEntity(val position: Position) : Entity() {
+private class TemporaryTeleporterEntity(val position: Position) : Entity {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {}
 
     override fun interact(llama: Llama) {}

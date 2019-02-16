@@ -1,9 +1,12 @@
 package main.kotlin.amaze.puzzles
 
-import main.kotlin.amaze.*
+import main.kotlin.amaze.LlamaAction
+import main.kotlin.amaze.LlamaController
+import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.GameController
+import main.kotlin.amaze.toMaze
 
-fun main(args: Array<String>) {
+fun main() {
     GameController(puzzles[0].toMaze(Puzzle1())).startGame()
 }
 

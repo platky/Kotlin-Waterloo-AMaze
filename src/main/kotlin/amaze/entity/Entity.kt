@@ -4,10 +4,10 @@ import main.kotlin.amaze.Llama
 import java.awt.Graphics2D
 
 /**
- * Represents an entity which exists at a location in the maze such as a [Walkway] or [Forest].
+ * Represents an entity (such as a [Walkway] or [Forest]) which exists at a location in the maze.
  */
-abstract class Entity {
-    abstract fun draw(graphics: Graphics2D, width: Int, height: Int)
+interface Entity {
+    fun draw(graphics: Graphics2D, width: Int, height: Int)
 
-    abstract fun interact(llama: Llama)
+    fun interact(llama: Llama)
 }

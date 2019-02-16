@@ -4,11 +4,9 @@ import main.kotlin.amaze.LlamaAction
 import main.kotlin.amaze.LlamaController
 import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.GameController
-import main.kotlin.amaze.entity.Forest
-import main.kotlin.amaze.entity.Walkway
 import main.kotlin.amaze.toMaze
 
-fun main(args: Array<String>) {
+fun main() {
     GameController(puzzles[2].toMaze(Puzzle3())).startGame()
 }
 
