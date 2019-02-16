@@ -9,7 +9,7 @@ import java.awt.Graphics2D
 /**
  * The destination where the llama is trying to get to.
  */
-object Destination : Entity() {
+object Destination : Entity {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         Images.walkway.draw(graphics, width, height)
         Images.destination.draw(graphics, width, height)

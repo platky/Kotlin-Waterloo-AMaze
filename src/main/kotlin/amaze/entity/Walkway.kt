@@ -9,7 +9,7 @@ import java.awt.TexturePaint
 /**
  * The llama likes to walk on walkways.
  */
-object Walkway : Entity() {
+object Walkway : Entity {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         val paint = TexturePaint(Images.walkway, Rectangle(0, 0, width, height))
         with(graphics) {

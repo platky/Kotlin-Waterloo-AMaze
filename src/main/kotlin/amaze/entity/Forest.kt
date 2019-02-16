@@ -15,7 +15,7 @@ private val FORREST_IMAGES = listOf(
 /**
  * The llama is afraid to walk through a [Forest] in fear of being hunted and slaughtered.
  */
-class Forest : Entity() {
+class Forest : Entity {
     private val forestImage by FORREST_IMAGES.random()
 
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {

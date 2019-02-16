@@ -6,7 +6,7 @@ import main.kotlin.amaze.Maze
 import main.kotlin.amaze.core.GameController
 import main.kotlin.amaze.toMaze
 
-fun main(args: Array<String>) {
+fun main() {
     GameController(puzzles[8].toMaze(Puzzle9())).startGame()
 }
 
