@@ -1,11 +1,12 @@
 package main.kotlin.amaze.puzzles
 
 import main.kotlin.amaze.entity.VanishingWalkwayPattern
-import main.kotlin.amaze.entity.VanishingWalkwayState
-import main.kotlin.amaze.entity.VanishingWalkwayState.*
+import main.kotlin.amaze.entity.VanishingWalkwayState.PIT
+import main.kotlin.amaze.entity.VanishingWalkwayState.WALKWAY
 
 val puzzles = listOf(
-    PuzzleDefinition("""
+    PuzzleDefinition(
+        """
         XXXXXXX
         XXXDXXX
         XXXOXXX
@@ -13,115 +14,164 @@ val puzzles = listOf(
         XXXOXXX
         XXXSXXX
         XXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent()
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXX
         XOOOODX
-        XOXXXXX
-        XSXXXXX
-        XXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
-        XXXXXXX
-        XXXDXXX
         XXXOXXX
-        XXXOXXX
+        XXXSXXX
+        XXXXXXX
+    """.trimIndent()
+    ),
+    PuzzleDefinition(
+        """
+        XXXXXXX
+        XVXDXVX
+        XOXOXOX
+        XOXOXOX
         XXXOXXX
         XSOOOSX
         XXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent()
+    ),
+    PuzzleDefinition(
+        """
+        XXXXXXX
+        XXXDXXX
+        XXXVXXX
+        XXXVXXX
+        XXXVXXX
+        XXXVXXX
+        XXXVXXX
+        XXXSXXX
+        XXXXXXX
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, PIT),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, PIT, PIT),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, PIT, PIT, PIT, PIT),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, PIT, PIT, PIT, PIT, PIT),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, PIT, PIT, PIT, PIT, PIT, PIT, PIT, PIT)
+        )
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXX
         XOOOOOOOOOX
         XOXOXOXOXOX
         XOXOXOXOXOX
-        XSXPXDXPXSX
+        XOXVXDXVXOX
+        XSXOOOOOXSX
         XXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent()
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXXXXX
-        XDOXXXXXOOOOOX
-        XXOOOOOOOOXXOX
-        XXOOPOXXXOXOOX
-        XXXXXXPXOOXXXX
-        XXXOOOOOOOXXXX
-        XPOOOOSXXOOOOX
+        XDOXXXOOOOOOOX
+        XXOOOOOXOOXXOX
+        XXOOVOXXXOXOOX
+        XXXXXXVXOOXXXX
+        XXXOOOOOOOXOOX
+        XVOOOOSXXOOOOX
         XXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(PIT, WALKWAY, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, PIT, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, PIT)
+        )
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXXXXXXXXXXX
         XDOOOOOOOOPOOOOOOOOX
-        XPXXXXOXPOXOXXXXOXOX
-        XOXXOOOXXXXXOOOOXXOX
+        XVXOXXOXPOXOXXXXOXOX
+        XOXXOOOXXXOXOOOOXOOX
         XOOOXXOOOOOXOXXOXXOX
         XOXXXXXXXXOOXOOOOOOX
-        XOOOOOOXXXXOOOXOXPOX
+        XOOOOOOXOOXOOOXOXPOX
         XXXXXOXOOOXXXXXOXXOX
         XOOOXOOOXXXOXXXOOOXX
         XOXOXXXOOOOOOOXXXOOX
         XOOOOOOOXXSXXOOOOOXX
         XXXXXXXXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(PIT, WALKWAY, WALKWAY)
+        )
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXXXXX
-        XXOOOOOOOOOPFX
-        XXDXXXXXXXOOOX
-        XXXXXXXXXXXXXX
-        XXXXXOOOOOOXFX
+        XXOOOOOOOOOVFX
+        XXDXXOVOOXOOOX
+        XXXOXXXXXXXXXX
+        XXXOXOOOOOOXFX
         XSOOOOXOXXOOOX
         XXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent()
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXXXXX
-        XXXXXOOOOOOFXX
-        XXOOOXXXXXXXXX
-        XXOGOOOOOOOXXX
-        XXODXPPXXXFOOX
-        XXXXXOOOOOOXOX
+        XXXXXVOOOOOFXX
+        XOOOOXXXXXXXXX
+        XXOGOOOOOOOXOX
+        XOODXVVXXXFOOX
+        XXXXXVVOOOOXOX
         XSSSOOOOOXXXGX
         XXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
-        XXXXXXXXXXXXXX
-        XSOXOOOXPGXPFX
-        XXOOOXOOOOPOOX
-        XXXXXXXXXOOOXX
-        XFXOOOOPXXXXXX
-        XOOOXXDPXPOOOX
-        XXXXXXOOOOXXHX
-        XXOOOXXXXXXXXX
-        XOOPOOOOXOOOXX
-        XGPXHPXOOOXOSX
-        XXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, PIT),
+            VanishingWalkwayPattern(WALKWAY, PIT),
+            VanishingWalkwayPattern(PIT, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, PIT),
+            VanishingWalkwayPattern(PIT, WALKWAY)
+        )
+    ),
+    PuzzleDefinition(
+        """
+        XXXXXXX
+        XXXSXXX
+        XXXVXXX
+        XXXVOXX
+        XXXVXXX
+        XXOVXXX
+        XXXVXXX
+        XXXVOXX
+        XXXVXXX
+        XXXDXXX
+        XXXXXXX
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, WALKWAY, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, WALKWAY, PIT, WALKWAY, WALKWAY, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, WALKWAY, PIT, WALKWAY, WALKWAY, WALKWAY, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, WALKWAY, PIT, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY),
+            VanishingWalkwayPattern(WALKWAY, PIT, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY, WALKWAY)
+        )
+    ),
+    PuzzleDefinition(
+        """
         XXXXXXXXXXXXXXXX
         XSSOOSOXOOSOOSSX
-        XOOOOOOSOOOOOOOX
-        XSSXXXXXXXXXXOOX
+        XOOXOOOSOOOOXOOX
+        XSXXXXXXXXXXXXOX
         XOOXOOOOOOOOXOOX
-        XOOOOXXOOXXOOOOX
-        XOOOOXFOGPXOOSSX
+        XOOOOXXOOXXOOOSX
+        XXOOOXFOGPXOOSXX
         XSSOOXDGPFXOOOOX
-        XOOXXXXXXXXXXOOX
+        XOXXXXXXXXXXXXOX
         XOOXOSOOOOSOXOOX
         XSSOOOOSOOOOOSSX
         XSSOOXOSOOXOOSSX
         XXXXXXXXXXXXXXXX
-    """.trimIndent()),
-    PuzzleDefinition("""
-        XXXXXXX
-        XXXDXXX
-        XXXOXXX
-        XXXVXXX
-        XXXOXXX
-        XXXSXXX
-        XXXXXXX
-    """.trimIndent(),
-        listOf(
-            VanishingWalkwayPattern(
-                WALKWAY, WALKWAY, PIT
-            )
-        )
+    """.trimIndent()
     )
 )
