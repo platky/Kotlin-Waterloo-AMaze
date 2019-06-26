@@ -11,7 +11,7 @@ import java.awt.Graphics2D
  * A [Teleporter] is a quantum mechanical device which transports the llama by taking advantage of
  * quantum entanglement.
  */
-class Teleporter(private val endpoint: Position) : Entity() {
+class Teleporter(private val endpoint: Position) : Entity {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
         Images.walkway.draw(graphics, width, height)
         Images.teleporter.draw(graphics, width, height)

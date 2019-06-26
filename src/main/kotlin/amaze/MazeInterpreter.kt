@@ -1,6 +1,7 @@
 package main.kotlin.amaze
 
 import main.kotlin.amaze.entity.*
+import main.kotlin.amaze.puzzles.PuzzleDefinition
 import java.awt.Graphics2D
 
 private const val START_BLOCK = 'S'
@@ -8,6 +9,7 @@ private const val WALKWAY = 'O'
 private const val PIT = 'P'
 private const val DESTINATION = 'D'
 private const val BLOCK = 'X'
+private const val VANISHING_WALKWAY = 'V'
 
 private const val TELEPORTER_1 = 'F'
 private const val TELEPORTER_2 = 'G'
@@ -18,8 +20,8 @@ private const val TELEPORTER_5 = 'J'
 /**
  * Interprets and constructs a [Maze] from [this] string representation.
  */
-fun String.toMaze(controller: LlamaController): Maze {
-    val rows = lines()
+fun PuzzleDefinition.toMaze(controller: LlamaController): Maze {
+    val rows = this.tileMap.lines()
     val height = rows.size
     require(height >= 5) { "Maze must be at least 5 spaces tall" }
 
@@ -29,6 +31,7 @@ fun String.toMaze(controller: LlamaController): Maze {
     val possibleStartingPositions = mutableListOf<Position>()
     var destinationPosition: Position? = null
     val teleporters = mutableMapOf<Char, MutableList<TemporaryTeleporterEntity>>()
+    val activeEntities = mutableSetOf<ActiveEntity>()
 
     val entityGrid: Array<Array<Entity>> = Array(height) { row ->
         Array(width) { column ->
@@ -40,6 +43,8 @@ fun String.toMaze(controller: LlamaController): Maze {
             val entity = char.toEntity(row, column)
             if (entity is TemporaryTeleporterEntity) {
                 teleporters.addToList(rows[row][column], entity)
+            } else if(entity is ActiveEntity) {
+                activeEntities.add(entity)
             }
 
             entity
@@ -60,8 +65,20 @@ fun String.toMaze(controller: LlamaController): Maze {
         }
     }
 
+    var vanishingWalkwayIndex = 0
+    activeEntities.filter { it is VanishingWalkway }.forEach {
+        it as VanishingWalkway
+
+        if (vanishingWalkwayIndex < this.vanishingWalkwayPatterns.size) {
+            it.setStatePattern(this.vanishingWalkwayPatterns[vanishingWalkwayIndex])
+            vanishingWalkwayIndex++
+        } else {
+            it.setStatePattern()
+        }
+    }
+
     val startingPosition = possibleStartingPositions.random()
-    return Maze(entityGrid, controller, destinationPosition!!, startingPosition)
+    return Maze(entityGrid, controller, destinationPosition!!, startingPosition, activeEntities)
 }
 
 /**
@@ -76,10 +93,11 @@ private fun Char.toEntity(row: Int, column: Int): Entity = when (this) {
     TELEPORTER_1, TELEPORTER_2, TELEPORTER_3, TELEPORTER_4, TELEPORTER_5 -> {
         TemporaryTeleporterEntity(Position(column, row))
     }
+    VANISHING_WALKWAY -> VanishingWalkway()
     else -> error("$this is not a valid representation of an entity")
 }
 
-private class TemporaryTeleporterEntity(val position: Position) : Entity() {
+private class TemporaryTeleporterEntity(val position: Position) : Entity {
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {}
 
     override fun interact(llama: Llama) {}

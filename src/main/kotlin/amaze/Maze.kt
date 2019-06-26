@@ -2,6 +2,7 @@ package main.kotlin.amaze
 
 import main.kotlin.amaze.LlamaOrientation.*
 import main.kotlin.amaze.core.assets.Images
+import main.kotlin.amaze.entity.ActiveEntity
 import main.kotlin.amaze.entity.Entity
 import java.awt.Color
 import java.awt.Graphics2D
@@ -14,7 +15,8 @@ class Maze(
     private val entityGrid: Array<Array<Entity>>,
     private val controller: LlamaController,
     val destinationPosition: Position, // The destination where the llama is trying to get to
-    startingPosition: Position
+    startingPosition: Position,
+    private val activeEntities: Set<ActiveEntity>
 ) {
     /** The current llama position */
     var llamaPosition: Position = startingPosition
@@ -88,6 +90,8 @@ class Maze(
         llamaPosition = llama.finishMove(llamaPosition)
         if (!llama.state.isReadyForAnotherUserMove()) return
 
+        transitionActiveEntities()
+
         llama.startUserMove(controller.getNextMove(this))
         val nextPosition = llama.getNextPosition(llamaPosition)
         if (llamaPosition != nextPosition) {
@@ -157,5 +161,11 @@ class Maze(
             imageWidth.toInt(), imageHeight.toInt(),
             null
         )
+    }
+
+    private fun transitionActiveEntities() {
+        activeEntities.forEach {
+            it.transition()
+        }
     }
 }
