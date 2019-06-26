@@ -1,7 +1,11 @@
 package main.kotlin.amaze.puzzles
 
+import main.kotlin.amaze.entity.VanishingWalkwayPattern
+import main.kotlin.amaze.entity.VanishingWalkwayState
+import main.kotlin.amaze.entity.VanishingWalkwayState.*
+
 val puzzles = listOf(
-    """
+    PuzzleDefinition("""
         XXXXXXX
         XXXDXXX
         XXXOXXX
@@ -9,15 +13,15 @@ val puzzles = listOf(
         XXXOXXX
         XXXSXXX
         XXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXX
         XOOOODX
         XOXXXXX
         XSXXXXX
         XXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXX
         XXXDXXX
         XXXOXXX
@@ -25,16 +29,16 @@ val puzzles = listOf(
         XXXOXXX
         XSOOOSX
         XXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXX
         XOOOOOOOOOX
         XOXOXOXOXOX
         XOXOXOXOXOX
         XSXPXDXPXSX
         XXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXX
         XDOXXXXXOOOOOX
         XXOOOOOOOOXXOX
@@ -43,8 +47,8 @@ val puzzles = listOf(
         XXXOOOOOOOXXXX
         XPOOOOSXXOOOOX
         XXXXXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXXXXXXXX
         XDOOOOOOOOPOOOOOOOOX
         XPXXXXOXPOXOXXXXOXOX
@@ -57,8 +61,8 @@ val puzzles = listOf(
         XOXOXXXOOOOOOOXXXOOX
         XOOOOOOOXXSXXOOOOOXX
         XXXXXXXXXXXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXX
         XXOOOOOOOOOPFX
         XXDXXXXXXXOOOX
@@ -66,8 +70,8 @@ val puzzles = listOf(
         XXXXXOOOOOOXFX
         XSOOOOXOXXOOOX
         XXXXXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXX
         XXXXXOOOOOOFXX
         XXOOOXXXXXXXXX
@@ -76,8 +80,8 @@ val puzzles = listOf(
         XXXXXOOOOOOXOX
         XSSSOOOOOXXXGX
         XXXXXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXX
         XSOXOOOXPGXPFX
         XXOOOXOOOOPOOX
@@ -89,8 +93,8 @@ val puzzles = listOf(
         XOOPOOOOXOOOXX
         XGPXHPXOOOXOSX
         XXXXXXXXXXXXXX
-    """.trimIndent(),
-    """
+    """.trimIndent()),
+    PuzzleDefinition("""
         XXXXXXXXXXXXXXXX
         XSSOOSOXOOSOOSSX
         XOOOOOOSOOOOOOOX
@@ -104,5 +108,20 @@ val puzzles = listOf(
         XSSOOOOSOOOOOSSX
         XSSOOXOSOOXOOSSX
         XXXXXXXXXXXXXXXX
-    """.trimIndent()
+    """.trimIndent()),
+    PuzzleDefinition("""
+        XXXXXXX
+        XXXDXXX
+        XXXOXXX
+        XXXVXXX
+        XXXOXXX
+        XXXSXXX
+        XXXXXXX
+    """.trimIndent(),
+        listOf(
+            VanishingWalkwayPattern(
+                WALKWAY, WALKWAY, PIT
+            )
+        )
+    )
 )
