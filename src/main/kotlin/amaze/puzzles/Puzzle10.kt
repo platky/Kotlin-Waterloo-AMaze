@@ -15,6 +15,6 @@ fun main() {
  */
 class Puzzle10 : LlamaController {
     override fun getNextMove(maze: Maze): LlamaAction {
-        return LlamaAction.MOVE_FORWARD
+        return LlamaAction.WAIT
     }
 }

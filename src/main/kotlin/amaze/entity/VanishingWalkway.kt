@@ -20,6 +20,7 @@ class VanishingWalkwayPattern(
 
 class VanishingWalkway : ActiveEntity {
     private lateinit var states: List<VanishingWalkwayState>
+    private var hasBeenSet = false
     private var stateIndex = 0
 
     override fun draw(graphics: Graphics2D, width: Int, height: Int) {
@@ -40,6 +41,12 @@ class VanishingWalkway : ActiveEntity {
     }
 
     fun setStatePattern(pattern: VanishingWalkwayPattern = VanishingWalkwayPattern(WALKWAY, PIT)) {
+        if (hasBeenSet) return
         states = pattern.states
+        hasBeenSet = true
+    }
+
+    fun getCurrentState(): VanishingWalkwayState {
+        return states[stateIndex]
     }
 }
